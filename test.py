@@ -16,10 +16,6 @@ for x in range(len(resultsArray)):
     sumOfResults += resultsArray[x]
     deviation[x] = (resultsArray[x] - currentPingStats['avg']) ** 2
     sumOfdeviation += deviation[x]
-
-print(deviation)
-print(sumOfdeviation)
 standardDev = sqrt(sumOfdeviation/len(resultsArray))
 currentPingStats['stddev'] = standardDev
 print(currentPingStats)
-print(resultsArray)
