@@ -4,14 +4,14 @@ from multiprocessing import Process, Pipe
 import json
 import socket
 import smtplib
-from getmac import get_mac_address as gma
 from email.message import EmailMessage
 import datetime
-
+from math import sqrt
+from database import startDatabaseWorker
 
 def pingTest(results):
     #Runs a ping test, converts data into a string. 100 pings, 50 seconds totalpingResults = str(ping('8.8.8.8', verbose=False, count=5,interval=0.5))
-    pingResults = str(ping('8.8.8.8', count=100,interval=0.5))
+    pingResults = str(ping('8.8.8.8', count=5,interval=0.5))
     pingResults = pingResults.replace('Reply from 8.8.8.8, ', '')
     resultsArray = pingResults.split('\n')
     currentPingStats = resultsArray[-1][32:-2].split('/')
@@ -52,6 +52,7 @@ def speedTest(results):
         print(json.decoder.JSONDecodeError, obj, s.results.dict())
         results.send(str(s.results.dict()))
 
+
 if __name__ == '__main__':
     #setup a new pipe for 2 shared objects
     pingResults, speedResults = Pipe()
@@ -65,5 +66,4 @@ if __name__ == '__main__':
     speedtestThread.join()
     #grab results
     results = [pingResults.recv(),speedResults.recv()]
-    #print in console and start email
-    print(results[0], results[1])
+    startDatabaseWorker(results[0], results[1])
