@@ -6,9 +6,10 @@ import json
 import socket
 import smtplib
 from email.message import EmailMessage
-import datetime
 from math import sqrt
 from database import startDatabaseWorker
+import raspProbeLogging as logging
+import ensureWifiConnection as checkWifi
 import psutil
 import os
 
@@ -17,10 +18,11 @@ ipAdd = '127.0.0.1'
 for netDev in addrs:
     temp = addrs[netDev][0][1]
     if("172.26" in temp):
-        ipAdd = netDev
+        ipAdd = temp
+        logging.network("Connection Successful to ChargerWifi")
 
 def pingTest(results):
-    pingResults = subprocess.Popen(['ping', '-I' + str(ipAdd), '-i 0.5', '-c 100', '8.8.8.8'], stdout=subprocess.PIPE)
+    pingResults = subprocess.Popen(['ping', '-I' + str(ipAdd), '-i 0.5', '-c 10', '8.8.8.8'], stdout=subprocess.PIPE)
     output = str(pingResults.communicate()).replace('n64 bytes from 8.8.8.8: ', '').split('\n')
     output = output[0].split('\\')
     for item in range(1, len(output)-5):
@@ -42,14 +44,14 @@ def pingTest(results):
         sumOfdeviation += deviation[x]
     standardDev = sqrt(sumOfdeviation/len(resultsArray))
     currentPingStats['stddev'] = standardDev
-    results.send(str(currentPingStats))
-    print("Finished PingTest")
+    logging.pingTest("Finished PingTest, Stats: %s\nFull Output: %s"%(json.dumps(currentPingStats, indent=4), json.dumps(output, indent=4)))
+    results.send(json.dumps(currentPingStats, indent=4))
 
 
 def speedTest(results):
     #Runs a speed test from speedtest.net
     threads = None
-    s = speedtest.Speedtest()
+    s = speedtest.Speedtest(source_address=ipAdd)
     s.get_best_server()
     s.download(threads=threads)
     s.upload(threads=threads)
@@ -58,15 +60,24 @@ def speedTest(results):
     obj = str(s.results.dict()).replace("'", '"')
     obj = obj.replace("None", '"None"')
     obj = json.loads(obj)
+    logging.speedTest("Finished SpeedTest, Full Output: %s"%(json.dumps(obj, indent=4)))
     try:   
         results.send(json.dumps(obj, indent=4))
     except json.decoder.JSONDecodeError:
         #in case something doesnt print right, will print without json pretty printing
-        print(json.decoder.JSONDecodeError, obj, s.results.dict())
+        logging.speedTest("SpeedTest Error: %s\nData: %s\nData as Dict: %s"%(json.decoder.JSONDecodeError, obj, s.results.dict()))
         results.send(str(s.results.dict()))
 
 
 if __name__ == '__main__':
+    attemptedConnection = 0
+    while ("172.26" not in ipAdd) and (attemptedConnection != 5):
+        attemptedConnection += 1
+        logging.network("Unable to connect to ChargerWifi, attempting reconnection...")
+        checkWifi.getWifiConnection()
+    if (attemptedConnection == 5):
+        logging.network("Unable to connect to ChargerWifi, shutting down program")
+        logging.error("Unable to connect to ChargerWifi, shutting down program")
     #setup a new pipe for 2 shared objects
     pingResults, speedResults = Pipe()
     #start two new processes, filling in the necessesary args
@@ -79,5 +90,4 @@ if __name__ == '__main__':
     speedtestThread.join()
     #grab results
     results = [pingResults.recv(),speedResults.recv()]
-    print(results)
     #startDatabaseWorker(results[0], results[1])

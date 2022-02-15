@@ -30,6 +30,12 @@ def pingTest(results):
         sumOfdeviation += deviation[x]
     standardDev = sqrt(sumOfdeviation/len(resultsArray))
     currentPingStats['stddev'] = standardDev
+    try:   
+        results.send(json.dumps(currentPingStats, indent=4))
+    except json.decoder.JSONDecodeError:
+        #in case something doesnt print right, will print without json pretty printing
+        print(json.decoder.JSONDecodeError, obj, s.results.dict())
+        results.send(str(s.results.dict()))
     results.send(str(currentPingStats))
     print("Finished PingTest")
 
