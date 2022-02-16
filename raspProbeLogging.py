@@ -24,7 +24,7 @@ def database(status):
 
 def error(err):
     print(err)
-    writeLog("[%s]"%getTime() + err, 'errors')
+    writeLog("[%s]"%getTime("time", "raspProbeLogging errorLogs") + err, 'errors')
 
 def getTime(timeType, fromWho):
     if timeType == 'time':

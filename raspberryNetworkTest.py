@@ -4,8 +4,6 @@ from multiprocessing import Process, Pipe
 import subprocess
 import json
 import socket
-import smtplib
-from email.message import EmailMessage
 from math import sqrt
 from database import startDatabaseWorker
 import raspProbeLogging as logging
@@ -22,7 +20,7 @@ for netDev in addrs:
         logging.network("Connection Successful to ChargerWifi")
 
 def pingTest(results):
-    pingResults = subprocess.Popen(['ping', '-I' + str(ipAdd), '-i 0.5', '-c 10', '8.8.8.8'], stdout=subprocess.PIPE)
+    pingResults = subprocess.Popen(['ping', '-I' + str(ipAdd), '-i 0.5', '-c 5', '8.8.8.8'], stdout=subprocess.PIPE)
     output = str(pingResults.communicate()).replace('n64 bytes from 8.8.8.8: ', '').split('\n')
     output = output[0].split('\\')
     for item in range(1, len(output)-5):
@@ -71,13 +69,13 @@ def speedTest(results):
 
 if __name__ == '__main__':
     attemptedConnection = 0
-    while ("172.26" not in ipAdd) and (attemptedConnection != 5):
-        attemptedConnection += 1
+    if ("172.26" not in ipAdd):
         logging.network("Unable to connect to ChargerWifi, attempting reconnection...")
-        checkWifi.getWifiConnection()
+        attemptedConnection = checkWifi.getWifiConnection(attemptedConnection)
     if (attemptedConnection == 5):
         logging.network("Unable to connect to ChargerWifi, shutting down program")
         logging.error("Unable to connect to ChargerWifi, shutting down program")
+        exit()
     #setup a new pipe for 2 shared objects
     pingResults, speedResults = Pipe()
     #start two new processes, filling in the necessesary args
@@ -90,4 +88,4 @@ if __name__ == '__main__':
     speedtestThread.join()
     #grab results
     results = [pingResults.recv(),speedResults.recv()]
-    #startDatabaseWorker(results[0], results[1])
+    startDatabaseWorker(results[0], results[1])
