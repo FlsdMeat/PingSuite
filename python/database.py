@@ -1,8 +1,7 @@
-from getmac import get_mac_address as gma
+
 import mariadb
 import sys
 import datetime
-from socket import gethostname
 
 def startDatabaseWorker(SpeedTest, Ping):
     #start by connecting to the database
@@ -22,7 +21,7 @@ def startDatabaseWorker(SpeedTest, Ping):
     #check if the device exists
     try: 
         cur.execute("SELECT * from Devices WHERE MacAddress='" + gma() + "'")
-        print(cur.Info())
+        print(cur)
     except mariadb.Error as e: 
         print(f"Error: {e}")
     count = 0
@@ -58,8 +57,6 @@ def addDevice(dbCursor, mac):
 
 def addPingResult(deviceID, SpeedTest, Ping):
     current_time = datetime.datetime.now()
-    
-    
     try: 
         dbCursor.execute("INSERT INTO `PingResults` (`deviceID`,`datetime`,`pingMin`, `pingAvg`, `pingMax`, `pingStdDev`, `sTdown`,`sTup`,`sTping`)" +
         "Values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"%(

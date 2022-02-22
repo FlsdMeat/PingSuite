@@ -5,7 +5,7 @@ import subprocess
 import json
 import socket
 from math import sqrt
-from database import startDatabaseWorker
+from sendToServer import postData
 import raspProbeLogging as logging
 import ensureWifiConnection as checkWifi
 import psutil
@@ -43,7 +43,7 @@ def pingTest(results):
     standardDev = sqrt(sumOfdeviation/len(resultsArray))
     currentPingStats['stddev'] = standardDev
     logging.pingTest("Finished PingTest, Stats: %s\nFull Output: %s"%(json.dumps(currentPingStats, indent=4), json.dumps(output, indent=4)))
-    results.send(json.dumps(currentPingStats, indent=4))
+    results.send(str(currentPingStats).replace("'",'"'))
 
 
 def speedTest(results):
@@ -57,10 +57,10 @@ def speedTest(results):
     #converts data to JSON, and makes it preeety
     obj = str(s.results.dict()).replace("'", '"')
     obj = obj.replace("None", '"None"')
-    obj = json.loads(obj)
-    logging.speedTest("Finished SpeedTest, Full Output: %s"%(json.dumps(obj, indent=4)))
+    tempObj = json.loads(obj)
+    logging.speedTest("Finished SpeedTest, Full Output: %s"%(json.dumps(tempObj, indent=4)))
     try:   
-        results.send(json.dumps(obj, indent=4))
+        results.send(obj)
     except json.decoder.JSONDecodeError:
         #in case something doesnt print right, will print without json pretty printing
         logging.speedTest("SpeedTest Error: %s\nData: %s\nData as Dict: %s"%(json.decoder.JSONDecodeError, obj, s.results.dict()))
@@ -83,9 +83,10 @@ if __name__ == '__main__':
     speedtestThread = Process(target=speedTest, args=(speedResults,))
     #start the threads
     pingThread.start()
-    speedtestThread.start()
     pingThread.join()
+    speedtestThread.start()
     speedtestThread.join()
     #grab results
-    results = [pingResults.recv(),speedResults.recv()]
-    startDatabaseWorker(results[0], results[1])
+    results = {"SpeedTest":pingResults.recv(),"PingResults":speedResults.recv()}
+    #startDatabaseWorker(results[0], results[1])
+    postData(results)

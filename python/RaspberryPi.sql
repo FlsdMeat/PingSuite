@@ -1,4 +1,4 @@
-CREATE DATABASE
+SELECT * FROM PingResults;
 -- @block
 CREATE TABLE `Devices`(
     `id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -11,13 +11,13 @@ CREATE TABLE `PingResults`(
     `pingID` INT PRIMARY KEY AUTO_INCREMENT,
     `deviceID` INT NOT NULL,
     `datetime` DATETIME NOT NULL,
-    `pingMin` INT NOT NULL,
-    `pingAvg` INT NOT NULL,
-    `pingMax` INT NOT NULL,
-    `pingStdDev` INT NOT NULL,
-    `sTdown` INT NOT NULL,
-    `sTup` INT NOT NULL,
-    `sTping` INT NOT NULL,
+    `pingMin` DECIMAL(7,6) NOT NULL,
+    `pingAvg` DECIMAL(7,6) NOT NULL,
+    `pingMax` DECIMAL(7,6) NOT NULL,
+    `pingStdDev` DECIMAL(10,5) NOT NULL,
+    `sTdown` DECIMAL(9,7) NOT NULL,
+    `sTup`  DECIMAL(9,7) NOT NULL,
+    `sTping`  DECIMAL(4,3) NOT NULL,
     FOREIGN KEY (`deviceID`) REFERENCES `Devices`(`id`)
 );
 -- @block

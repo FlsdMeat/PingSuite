@@ -1,0 +1,49 @@
+[14-26-51][Database]: Error with checkingDevice: Error: (conn=142, no: 1064, SQLState: 42000) You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''DeviceName', MacAddress) 
+                VALUES ('undefined','undefined')' at line 1
+sql: INSERT INTO Devices ('DeviceName', MacAddress) 
+                VALUES ('undefined','undefined') - parameters:[][14-28-17][Database]: Error with checkingDevice: Error: (conn=146, no: 1064, SQLState: 42000) You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''DeviceName', MacAddress) 
+                VALUES ('EchlinARCHAdmin','18:03:7...' at line 1
+sql: INSERT INTO Devices ('DeviceName', MacAddress) 
+                VALUES ('EchlinARCHAdmin','18:03:73:19:c8:46') - parameters:[]
+[14-29-36][Database]: Error with checkingDevice: Error: (conn=150, no: 1064, SQLState: 42000) You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''DeviceName', MacAddress) 
+                VALUES ('EchlinARCHAdmin','18:03:7...' at line 1
+sql: INSERT INTO Devices ('DeviceName', MacAddress) 
+                VALUES ('EchlinARCHAdmin','18:03:73:19:c8:46') - parameters:[]
+[14-30-0][Database]: Error with checkingDevice: Error: (conn=154, no: 1064, SQLState: 42000) You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''DeviceName', 'MacAddress') 
+                VALUES ('EchlinARCHAdmin','18:03...' at line 1
+sql: INSERT INTO Devices ('DeviceName', 'MacAddress') 
+                VALUES ('EchlinARCHAdmin','18:03:73:19:c8:46') - parameters:[]
+[14-31-21][Database]: Error with uploadSpeedTest: Error: (conn=158, no: 1064, SQLState: 42000) You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''deviceID', 'datetime', 'pingMin', 'pingAvg', 'pingMax', 'pingStdDev', 'sTdow...' at line 1
+sql: INSERT INTO PingResults ('deviceID', 'datetime', 'pingMin', 'pingAvg', 'pingMax', 'pingStdDev', 'sTdown','sTup','sTping') 
+                VALUES ([object Object], 2022-02-22, 50.906, 69.120, 85.674, 14.25584324642589, 117825043.43189016, 775156431.2212859, 6.837) - parameters:[]
+[14-47-2][Database]: Error with uploadSpeedTest: Error: (conn=165, no: 1064, SQLState: 42000) You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '[object Object], '2022-02-22', 31.939, 31.939, 31.939, 0.03900000000000148, 1...' at line 2
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES ([object Object], '2022-02-22', 31.939, 31.939, 31.939, 0.03900000000000148, 154751905.55037045, 790933605.6294446, 6.237) - parameters:[]
+[14-53-22][Database]: Error with uploadSpeedTest: Error: (conn=169, no: 1064, SQLState: 42000) You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '[object Object], '2022-02-22', 22.818, 72.895, 113.849, 37.4782126708305, 222...' at line 2
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES ([object Object], '2022-02-22', 22.818, 72.895, 113.849, 37.4782126708305, 222462656.91150582, 803861957.1482253, 6.453) - parameters:[]
+[14-54-18][Database]: Error with uploadSpeedTest: Error: (conn=173, no: 1064, SQLState: 42000) You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '[object Object], '2022-02-22', 8.618, 64.447, 112.813, 45.96779926209215, 176...' at line 2
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES ([object Object], '2022-02-22', 8.618, 64.447, 112.813, 45.96779926209215, 176229005.90586174, 746236977.5728334, 6.642) - parameters:[]
+[14-56-6][Database]: Error with uploadSpeedTest: Error: (conn=177, no: 1264, SQLState: 22003) Out of range value for column 'sTdown' at row 1
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES (5, '2022-02-22', 8.324, 8.475, 8.761, 0.16206480185407313, 150924835.59005493, 732842352.5460196, 7.137) - parameters:[]
+[14-58-22][Database]: Error with uploadSpeedTest: ReferenceError: int is not defined
+[14-59-31][Database]: Error with uploadSpeedTest: Error: (conn=185, no: 1264, SQLState: 22003) Out of range value for column 'pingAvg' at row 1
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES (5, '2022-02-22', 9.005, 67.472, 98.190, 31.27062193177488, 159507973, 534393600, 6.613) - parameters:[]
+[15-4-0][Database]: Error with uploadSpeedTest: Error: (conn=193, no: 1264, SQLState: 22003) Out of range value for column 'pingMin' at row 1
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES (5, '2022-02-22 15:4:0', 74.677, 91.237, 107.797, 16.650383449038042, 103314862, 552866222, 7.141) - parameters:[]
+[15-5-11][Database]: Error with uploadSpeedTest: Error: (conn=197, no: 1264, SQLState: 22003) Out of range value for column 'pingMin' at row 1
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES (5, '2022-02-22 15:5:11', 17.890, 37.743, 59.053, 15.341525641213133, 195213067, 524676687, 6.494) - parameters:[]
+[15-6-0][Database]: Error with uploadSpeedTest: Error: (conn=201, no: 1264, SQLState: 22003) Out of range value for column 'pingAvg' at row 1
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES (5, '2022-02-22 15:6:0', 15.911, 68.901, 98.634, 28.320381371019707, 142026087, 405234222, 6.251) - parameters:[]
+[15-6-34][Database]: Error with uploadSpeedTest: Error: (conn=205, no: 1264, SQLState: 22003) Out of range value for column 'pingStdDev' at row 1
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES (5, '2022-02-22 15:6:34', 25.186, 86.910, 121.784, 33.14452141757367, 146648976, 538708623, 7.045) - parameters:[]
+[15-8-36][Database]: Error with uploadSpeedTest: Error: (conn=209, no: 1264, SQLState: 22003) Out of range value for column 'pingStdDev' at row 1
+sql: INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES (5, '2022-02-22 15:8:36', 42.121, 60.694, 78.715, 14.9467, 166289163, 791041256, 7.479) - parameters:[]
