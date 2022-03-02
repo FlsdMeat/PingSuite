@@ -26,10 +26,19 @@ app.post('/pingResults', (req,res) => {
 })
 
 function sendToDatabase(data){
-
     let speedTest = data.SpeedTest
     let pingTest = data.PingResults
-    let dataResults = uploadSpeedTest(speedTest, pingTest, data.mac, data.name)
+    let dataResults = uploadSpeedTest(speedTest, pingTest, data.mac, data.name, data.ip)
+    console.log(dataResults)
 }
 
+if (process.env.NODE_ENV === 'production') {
+    // Serve any static files
+    app.use(express.static(__dirname + '/build'));
+      
+    // Handle React routing, return all requests to React app
+    app.get('*', function(req, res) {
+      res.sendFile(__dirname + '/build' +'index.html');
+    });
+}
 server.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))

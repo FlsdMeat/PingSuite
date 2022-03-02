@@ -33,7 +33,7 @@ function date(dateType, daysPrev){
     }
 }
 
-async function checkDevice(db, mac, deviceName){
+async function checkDevice(db, mac, deviceName, ipAddr){
     let res
     try {
         res = await db.query(
@@ -45,27 +45,29 @@ async function checkDevice(db, mac, deviceName){
         )
         if(res[0]['Result'] == false){
             res = await db.query(
-                `INSERT INTO Devices (DeviceName, MacAddress) 
-                VALUES ('${deviceName}','${mac}')`
-            )
-            res = await db.query(
-                `SELECT id FROM Devices WHERE MacAddress = '${mac}';
-                `
+                `INSERT INTO Devices (DeviceName, MacAddress, ipAddr) 
+                VALUES ('${deviceName}','${mac}', '${ipAddr}')`
             )
             return res[0]
-        } else {
-            return res[0]['Result']
+        } else if(res[0]['Result']['ipAddr'] !== ipAddr){
+            res = await db.query(
+                `UPDATE TABLE Devices SET ipAddr = '${ipAddr}' WHERE MacAddress = '${mac}';`
+            )
         }
+        res = await db.query(
+            `SELECT id FROM Devices WHERE MacAddress = '${mac}';`
+        )
+        return res[0]['Result']
     } catch (error) {
         databaseLog(`Error with checkingDevice: ${error}`)
         return false
     }
 }
 
-async function uploadSpeedTest(speedTest, pingTest, mac, deviceName){
+async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){
     let db, res;
     db = await pool.getConnection();
-    let deviceCheck = await checkDevice(db, mac, deviceName)
+    let deviceCheck = await checkDevice(db, mac, deviceName, ipAddr)
     if(deviceCheck){
         try {
             res = await db.query(
