@@ -13,7 +13,9 @@ import os
 
 addrs = psutil.net_if_addrs()
 ipAdd = '127.0.0.1'
+ethernet = 'eth0'
 for netDev in addrs:
+    print(netDev)
     temp = addrs[netDev][0][1]
     if("172.26" in temp):
         ipAdd = temp

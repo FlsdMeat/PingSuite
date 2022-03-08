@@ -3,8 +3,8 @@ const { databaseLog } = require('./logging.js')
 const mariadb = require('mariadb')
 const pool = mariadb.createPool({
     host:process.env.DB_HOST,
-    user:process.env.DB_USER,
-    password:process.env.DB_PW,
+    user:process.env.DB_StaffUSER,
+    password:process.env.DB_HomePW,
     database:process.env.DB_DATABASE,
     connectionLimit:4
 })
@@ -29,12 +29,12 @@ function date(dateType, daysPrev){
         year = pastDate.getFullYear();
         return `${year}-${month}-${date}`;
     } else {
-        databaseLog(`[DateTime]: Type not specified: ${dateType}`)
+        databaseLog(`[DateTime]: Type not specified`, `[DateTime]: Type not specified: ${dateType}`)
     }
 }
 
 async function checkDevice(db, mac, deviceName, ipAddr){
-    let res
+    let res = '';
     try {
         res = await db.query(
             `SELECT IF(
@@ -45,21 +45,22 @@ async function checkDevice(db, mac, deviceName, ipAddr){
         )
         if(res[0]['Result'] == false){
             res = await db.query(
-                `INSERT INTO Devices (DeviceName, MacAddress, ipAddr) 
-                VALUES ('${deviceName}','${mac}', '${ipAddr}')`
-            )
-            return res[0]
-        } else if(res[0]['Result']['ipAddr'] !== ipAddr){
+                `INSERT INTO Devices (DeviceName, MacAddress, ipAddr)
+                VALUES ('${deviceName}','${mac}', '${ipAddr}')`)
+            
+        } else if(res[0]['Result']['ipAddr'] !== ipAddr || res[0]['Result']['DeviceName'] !== deviceName){
             res = await db.query(
-                `UPDATE TABLE Devices SET ipAddr = '${ipAddr}' WHERE MacAddress = '${mac}';`
+                `UPDATE Devices SET ipAddr = '${ipAddr}', DeviceName = '${deviceName}' WHERE MacAddress = '${mac}';`
             )
         }
         res = await db.query(
             `SELECT id FROM Devices WHERE MacAddress = '${mac}';`
         )
-        return res[0]['Result']
+        console.log(res[0])
+
+        return res[0]
     } catch (error) {
-        databaseLog(`Error with checkingDevice: ${error}`)
+        databaseLog(`Error with checkingDevice`,error)
         return false
     }
 }
@@ -72,15 +73,35 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){
         try {
             res = await db.query(
                 `INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
-                VALUES (${deviceCheck}, '${date('date')} ${date('time')}', ${pingTest['min']}, ${pingTest['avg']}, ${pingTest['max']}, ${pingTest['stddev'].toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${speedTest['ping']})`
+                VALUES (${deviceCheck}, '${date('date')} ${date('time')}', ${pingTest['min']}, ${pingTest['avg']}, ${pingTest['max']}, ${pingTest['stddev'].toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${speedTest['ping'].limitTo(2)})`
             )
             delete res['meta']
             databaseLog(`${deviceName} latest ping was delievered to the database!`)
+            db.end()
             return true
         } catch (error) {
-            databaseLog(`Error with uploadSpeedTest: ${error}`)
+            databaseLog(`Error with uploadSpeedTest`,error)
+            db.end()
             return false
         }
     }
+    db.end();
 }
-module.exports = {uploadSpeedTest}
+
+async function getPingResults(){
+    let db, res;
+    db = await pool.getConnection();
+    try {
+        res = await db.query(
+            `SELECT * FROM PingResultsView;`
+        )
+        delete res[`meta`]
+        db.close();
+        return res
+    } catch (error) {
+        databaseLog(`Error with getPingResults`,error)
+        db.close();
+        return false
+    }
+}
+module.exports = {uploadSpeedTest, getPingResults}

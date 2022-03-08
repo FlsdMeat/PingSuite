@@ -1,34 +1,6 @@
 const fs = require('fs')
 const { cwd } = require('process')
 
-function generalLogs(status){
-    try {
-        let log = `[${date('time')}][General]: ${status}`
-        writeLog(log, 'general')
-        console.log()
-    } catch (error) {
-        reportLogError(error, 'generalLog')
-    }
-}
-function databaseLog(status){
-    try {
-        let log = `[${date('time')}][Database]: ${status}`
-        writeLog(log, 'database')
-    } catch (error) {
-        reportLogError(error, 'databaseLog')
-    }
-}
-
-function appPostLog(status){
-    try {
-        let log = `[${date('time')}][AppPost]: ${status}`
-        writeLog(log, 'appPost')
-    } catch (error) {
-        reportLogError(error, 'appPostLog')
-    }
-
-}
-
 function date(dateType){
     let date_time = new Date();
     let date = ("0" + date_time.getDate()).slice(-2);
@@ -40,12 +12,48 @@ function date(dateType){
     if (dateType === 'date'){
         return `${month}-${date}-${year}`;
     } else if (dateType === 'time'){
-        return `${hours}-${minutes}-${seconds}`;
+        return `${hours}:${minutes}:${seconds}`;
     } else {
         reportLogError(`Type not specified: ${dateType}`, 'date')
     }
 }
 
+function generalLogs(who, status, error){
+    let log = '';
+    try {
+        if (typeof error === 'object') {
+            if (error.message) {
+                log = (`[${date('time')}][${who}]: ${status}\n` + error.message)
+            }
+            if (error.stack) {
+                log = (`[${date('time')}][${who}]: ${status}\nStacktrace:
+                            ==========================\n` + error.stack)
+            }
+        } else {
+            log = (`[${date('time')}][${who}]: ${status}\n${error}`);
+        }
+        writeLog(log, who)
+    } catch (err) {
+        reportLogError(err, 'generalLogs')
+    }
+}
+
+function databaseLog(status, error){
+    try {
+        generalLogs('database', status, error)
+    } catch (error) {
+        reportLogError(error, 'databaseLog')
+    }
+}
+
+function appPostLog(status, error){
+    try {
+        generalLogs('appPostLog', status, error)
+    } catch (error) {
+        reportLogError(error, 'appPostLog')
+    }
+
+}
 function reportLogError(err, who){
     console.log(`[${date('date')}__${date('time')}][${who}]: ${err}`)
 }

@@ -1,0 +1,114 @@
+[11-36-31][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: getMonth is not defined
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:44:17
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:36:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)[11-36-32][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: getMonth is not defined
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:44:17
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:36:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-37-6][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:44:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:85:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:77:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-37-33][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:44:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:85:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:77:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-37-48][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:45:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:86:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:78:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-38-8][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:45:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:87:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:78:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-39-9][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:45:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:87:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:78:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-39-22][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:45:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:87:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:78:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-40-39][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:45:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:86:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:77:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-41-12][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:45:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:86:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:77:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-41-41][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:45:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:87:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:77:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-42-17][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:45:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:87:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:77:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[11-42-29][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at getMonth (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:45:12)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:87:27
+    at Array.forEach (<anonymous>)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:77:25
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)

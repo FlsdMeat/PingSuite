@@ -12,6 +12,19 @@
             "database": "RaspPingDatabase",
             "username": "echlinArch",
             "password": "yTppW5hCKxDf7Mp"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "10.5.70.233",
+            "port": 3306,
+            "driver": "MariaDB",
+            "name": "RaspPingHome",
+            "database": "RaspPingDatabase",
+            "username": "raspPingHome",
+            "password": "V0b393RfctQvVYYlqxtCFRW3"
         }
     ]
 }

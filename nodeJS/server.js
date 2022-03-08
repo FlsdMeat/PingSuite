@@ -1,12 +1,14 @@
 const express = require('express');
 const app = express()
 const server = require('http').createServer(app);
-const {uploadSpeedTest} = require('./database.js')
+const {uploadSpeedTest, getPingResults} = require('./database.js')
 const {appPostLog} = require('./logging.js')
 require('dotenv').config()
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+
+let cache = {}
 
 app.post('/pingResults', (req,res) => {
     let data = req.body
@@ -18,10 +20,66 @@ app.post('/pingResults', (req,res) => {
         })
         sendToDatabase(data)
         appPostLog(`${data.name} with a mac ${data.mac} just sent a ping!`)
-        res.send(true)
+        return res.send(true)
     } catch (error) {
-        appPostLog(`Error with parsing JSON: ${error}`)
-        res.send(false)
+        appPostLog(`[AppPost pingResults]: Error with parsing JSON`,error)
+        return res.send(false)
+    }
+})
+const getPrefix = (num) => {
+    let temp = (num.toString()).substring((num.toString()).length - 1)
+    if ((num.toString())[0] === '0'){
+        if (temp === '1'){
+        return temp + 'st'
+        } else if (temp === '2'){
+        return temp + 'nd'
+        } else if (temp === '3'){
+        return temp + 'rd'
+        }
+        return temp + 'th'
+    } else {
+        if (temp === '1'){
+        return num + 'st'
+        } else if (temp === '2'){
+        return num + 'nd'
+        } else if (temp === '3'){
+        return num + 'rd'
+        }
+        return num + 'th'
+    }
+}
+app.get('/api/pingResults', async (req, res) => {
+    try {
+        if (Object.keys(cache).length == 0){
+            let pingResults = await getPingResults();
+            let data = {}
+            pingResults.forEach(item => {
+                if (item.deviceID in data === false){
+                    data[item.deviceID] = {}
+                    data[item.deviceID]["DeviceName"] = item.DeviceName
+                }
+                let tempItem = {}
+                Object.assign(tempItem, item)
+                let date = item.datetime
+                date = date.toString().split(' ')
+                let time = date[4]
+                date = [date[1], date[2], date[3]]
+                date = `${date[0]} ${date[1]}, ${date[2]}`
+                if(!(date in data[item.deviceID])){
+                    data[item.deviceID][date] = {}
+                }
+                delete tempItem.DeviceName
+                delete tempItem.MacAddress
+                delete tempItem.deviceID
+                delete tempItem.datetime
+                data[item.deviceID][date][time] = tempItem
+            })
+            cache['temp'] = data
+        }
+        return res.send(cache['temp'])
+    } catch (error) {
+        appPostLog(`[AppGet pingResults]: Error with parsing JSON`,error)
+        return res.json(false)
     }
 })
 

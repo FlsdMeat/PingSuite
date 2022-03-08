@@ -1,5 +1,10 @@
 .main-content{
+
+}
+.GraphData{
+    width:75%;
 }
 body{
     background-color: hsl(217, 16%, 28%);
+    background-color: white;
 }

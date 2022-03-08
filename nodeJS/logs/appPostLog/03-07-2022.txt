@@ -1,0 +1,45 @@
+[18-19-12][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+Error: retrieve connection from pool timeout after 10002ms
+    at Object.module.exports.createError (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/misc/errors.js:61:10)
+    at timeoutTask (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/pool-base.js:319:16)
+    at Timeout.rejectAndResetTimeout [as _onTimeout] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/pool-base.js:342:5)
+    at listOnTimeout (node:internal/timers:559:11)
+    at processTimers (node:internal/timers:500:7)[18-19-59][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+Error: retrieve connection from pool timeout after 10001ms
+    at Object.module.exports.createError (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/misc/errors.js:61:10)
+    at timeoutTask (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/pool-base.js:319:16)
+    at Timeout.rejectAndResetTimeout [as _onTimeout] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/pool-base.js:342:5)
+    at listOnTimeout (node:internal/timers:559:11)
+    at processTimers (node:internal/timers:500:7)
+[18-26-25][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Object.keys(...).length is not a function
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:32:32
+    at Layer.handle [as handle_request] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/layer.js:95:5)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/index.js:281:22
+    at Function.process_params (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/index.js:341:12)
+    at next (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/index.js:275:10)
+    at urlencodedParser (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/body-parser/lib/types/urlencoded.js:91:7)
+    at Layer.handle [as handle_request] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/layer.js:95:5)
+[18-26-27][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Object.keys(...).length is not a function
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/server.js:32:32
+    at Layer.handle [as handle_request] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/layer.js:95:5)
+    at /Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/index.js:281:22
+    at Function.process_params (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/index.js:341:12)
+    at next (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/index.js:275:10)
+    at urlencodedParser (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/body-parser/lib/types/urlencoded.js:91:7)
+    at Layer.handle [as handle_request] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/express/lib/router/layer.js:95:5)
