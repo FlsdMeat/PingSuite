@@ -96,7 +96,7 @@ if (process.env.NODE_ENV === 'production') {
       
     // Handle React routing, return all requests to React app
     app.get('/', function(req, res) {
-      res.sendFile(__dirname + '/web-portal/build' +'index.html');
+      res.sendFile(__dirname + '/web-portal/build/' + 'index.html');
     });
 }
 server.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
