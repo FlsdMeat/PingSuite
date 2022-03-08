@@ -14,7 +14,7 @@ export default function App() {
   }, [])
 
   const getData = async () =>{
-    await axios.get('http://localhost:8080/api/pingResults').then(res=>{
+    await axios.get('/api/pingResults').then(res=>{
         updateResults(res.data);
         console.log(res.data)
         GraphReady(true)
