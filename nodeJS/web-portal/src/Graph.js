@@ -6,26 +6,96 @@ import axios from 'axios';
 Chart.register(...registerables);
 
 export default function App() {
-  const [PingResults, updateResults] = useState([]);
+  const [graphData, updateGraphData] = useState({});
+  const [graphType, updateGraphType] = useState(`pingAvg`);
   const [ready, GraphReady] = useState(false);
+
+  const getRandomColor = () =>{
+    return [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)]
+  }
+
 
   useEffect( () =>{
     getData()
   }, [])
 
   const getData = async () =>{
-    await axios.get('/api/pingResults').then(res=>{
-        updateResults(res.data);
-        console.log(res.data)
+    await axios.get('http://localhost:8080/api/pingResults').then(res=>{
+      if(res.data !== false){
+        Object.keys(res.data).forEach(item=>{
+          res.data[item]['color'] = getRandomColor()
+        })
+        updateGraphData(res.data);
         GraphReady(true)
-      })
+      }
+    })
   }
 
+  const createGraph = () => {
+    let graph = (<Graph key={1} graphData={graphData} graphType={graphType} dateRange={'none'}/>)
+    console.log(graph)
+    return [graph]
+  }
+
+  return (
+    <div className="main-content">
+      <nav>
+        <button>Graph1</button>
+        <button>Graph2</button>
+        <button>Graph3</button>
+        <button>Graph4</button>
+      </nav>
+      {ready && createGraph()}
+    </div>
+  );
+}
+
+async function Graph({graphData, graphType, dateRange}){
+  const [GraphPoints, updateGraph] = useState({})
+  useEffect(()=>{
+    typeof()
+    updateGraph(findGraphPoints(graphData, graphType, dateRange))
+    console.log(GraphPoints)
+  },[])
+  const titles = {
+    'pingAvg': 'Average Ping',
+    'pingStdDev': 'Standard Deveation',
+    'pingMax': 'Maximum Ping',
+    'pingMin': 'Minimum Ping',
+    'sTdown': 'SpeedTest.net Download',
+    'sTup': 'SpeedTest.net Upload'
+  }
+  return(
+    <div className='GraphData'>
+      <Line
+        datasetIdKey='id'
+        data={{
+          labels:GraphPoints.labels,
+          datasets:GraphPoints.datasets
+        }}
+        options={{
+          fill:true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+            },
+            title: {
+              display: true,
+              text: titles[graphType]
+            }
+          }
+        }}
+      />
+    </div>
+  )
+}
+
+async function findGraphPoints(graphData, graphType, dateRange){
   const getDateLabels = () => {
     let dates = {}
-    Object.keys(PingResults).forEach(device=>{
-      Object.keys(PingResults[device]).forEach(date =>{
-        if(!('DeviceName' === date)){
+    Object.keys(graphData).forEach(device=>{
+      Object.keys(graphData[device]).forEach(date =>{
+        if(!('DeviceName' === date || 'color' === date)){
           let year = date.substring(date.lastIndexOf(' ') + 1)
           let month = date.substring(0, date.indexOf(' '))
           let day = date.substring(date.indexOf(' ') + 1, date.lastIndexOf(','))
@@ -38,8 +108,9 @@ export default function App() {
           if(!(day in dates[year][month])){
             dates[year][month][day] = []
           }
-          date = PingResults[device][date]
+          date = graphData[device][date]
           Object.keys(date).forEach(ping =>{
+            
             dates[year][month][day].push([device, ping])
           })
         }
@@ -80,17 +151,13 @@ export default function App() {
     }
     return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex))
   }
-
-  const getRandomColor = () =>{
-    return [Math.random() * 256, Math.random() * 256, Math.random() * 256]
-  }
-
-  const getGraphData = (graphingObject,timeRange, timeZoom) => {
-    timeZoom = "days" // over a single 'day', multiple 'days', single month, multiple months, single year, multiple years
+  const getGraphData = () => {
+    let timeZoom = "days" // over a single 'day', multiple 'days', single month, multiple months, single year, multiple years
     let findDates = getDateLabels();
     let labels = [], labelsObj = {},
         datasets = [];
     if (timeZoom === "days"){
+      console.log(findDates)
       Object.keys(findDates).forEach(year =>{
         Object.keys(findDates[year]).forEach(month =>{
           Object.keys(findDates[year][month]).forEach(day =>{
@@ -101,21 +168,22 @@ export default function App() {
       })
     }
     labels = sortLabels(labels)
+    console.log(labels)
     console.log(labelsObj)
-    datasets = Object.keys(PingResults).map( (device, index) => {
+    datasets = Object.keys(graphData).map( (device, index) => {
       let tempDataObj = {}
-      Object.keys(PingResults[device]).forEach( (date) => {
+      Object.keys(graphData[device]).forEach( (date) => {
         let average = 0;
         if(date.substring(0, date.indexOf(',')) in labelsObj){
-          Object.keys(PingResults[device][date]).forEach(time => {
-            time = PingResults[device][date][time]
-            if(graphingObject === 'sTdown' || graphingObject === 'sTup'){
-              average += time[graphingObject] / 1000000
+          Object.keys(graphData[device][date]).forEach(time => {
+            time = graphData[device][date][time]
+            if(graphType === 'sTdown' || graphType === 'sTup'){
+              average += time[graphType] / 1000000
             } else {
-              average += time[graphingObject]
+              average += time[graphType]
             }
           })
-          average = average / Object.keys(PingResults[device][date]).length
+          average = average / Object.keys(graphData[device][date]).length
           tempDataObj[date.substring(0, date.indexOf(','))] = average
         }
       })
@@ -127,11 +195,11 @@ export default function App() {
           tempDataArr.push(tempDataObj[date])
         }
       })
-      let color = getRandomColor()
+      let color = graphData[device]['color']
       return{
         id: index + 1,
         data:tempDataArr,
-        label:PingResults[device]['DeviceName'],
+        label:graphData[device]['DeviceName'],
         backgroundColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`,
         borderColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`
       }
@@ -142,46 +210,5 @@ export default function App() {
     };
     return data;
   }
-
-  return (
-    <div className="main-content">
-      <nav>
-        <button>Graph1</button>
-        <button>Graph2</button>
-        <button>Graph3</button>
-        <button>Graph4</button>
-      </nav>
-      {ready && <Graph title={'Average Ping'} data={getGraphData('pingAvg')}/>}
-      {ready && <Graph title={'Standard Dev'} data={getGraphData('pingStdDev')}/>}
-      {ready && <Graph title={'Download'} data={getGraphData('sTdown')}/>}
-      {ready && <Graph title={'Upload'} data={getGraphData('sTup')}/>}
-    </div>
-  );
-}
-
-function Graph({title, data}){
-  console.log(data.datasets)
-  return(
-    <div className='GraphData'>
-      <Line
-        datasetIdKey='id'
-        data={{
-          labels:data.labels,
-          datasets:data.datasets
-        }}
-        options={{
-          fill:true,
-          plugins: {
-            legend: {
-              position: 'bottom',
-            },
-            title: {
-              display: true,
-              text: title
-            }
-          }
-        }}
-      />
-    </div>
-  )
+  return getGraphData()
 }
