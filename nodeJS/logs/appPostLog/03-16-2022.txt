@@ -1,0 +1,165 @@
+[10:1:59][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: ipAddr is not defined
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:79:59
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:59:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)[10:2:13][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: ipAddr is not defined
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:80:59
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:59:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[10:2:35][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: ipAddr is not defined
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:80:36
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:59:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[10:2:53][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: ipAddr is not defined
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:80:36
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:59:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[10:3:11][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: ipAddr is not defined
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:79:36
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:59:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[10:3:32][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: ipAddr is not defined
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:80:36
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:59:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[10:4:5][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: local is not defined
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:80:49
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:59:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[10:6:41][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+ReferenceError: getCurrentDeviceDetails is not defined
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:59:45
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:3:23][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'Mar 03, 2022')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:138:54
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:126:44
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:4:25][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'Mar 03, 2022')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:138:54
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:126:44
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:5:26][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'Mar 03, 2022')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:139:54
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:126:44
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:5:44][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'forEach')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:62:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:6:12][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'Mar 03, 2022')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:139:54
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:126:44
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:7:13][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'Mar 03, 2022')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:139:54
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:126:44
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:7:33][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'Mar 03, 2022')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:139:54
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:126:44
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:10:55][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'DeviceName')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:159:46
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:11:13][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'DeviceName')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:159:46
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:11:48][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'DeviceName')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:160:46
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[15:12:5][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+TypeError: Cannot set properties of undefined (setting 'DeviceName')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:160:46
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:124:44
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[16:25:53][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'forEach')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:62:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)

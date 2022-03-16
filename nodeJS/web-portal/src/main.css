@@ -5,3 +5,9 @@
 body{
     background-color: hsl(217, 16%, 28%);
 }
+nav{
+    display: flex;
+    flex-direction: row;
+    width:100%;
+    position: relative;
+}

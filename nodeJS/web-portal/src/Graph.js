@@ -1,18 +1,23 @@
 import './main.css';
 import {useEffect, useState} from 'react';
 import CreateGraph from './Graphs/CreateGraph.js'
+import DropDown from './Useful Items/DropDowns/DropDown.js';
 
 export default function App() {
   const [graphObject, updateGraphObject] = useState();
-  const [graphYAxis, updateYAxis] = useState(`pingMax`);
+  const [showGenerateGraph, updateGenGraph] = useState(false);
+  const [clickToUpdate, updateClick] = useState(0);
+  const [graphYAxis, updateYAxis] = useState(`pingAvg`);
   const [graphType, updateGraphType] = useState(`line`);
-  const [orgData, updateOrgData] = useState(`stddev`);
+  const [dataOrg, updateDataOrg] = useState(`stddev`);
+  const [rangeType,  updateRangeType] = useState(`allDates`);
+  const [dropDownObject, updateDropDown] = useState({'graphType':'Graph Selection', 'graphYAxis':'Statistic Selection','rangeType': 'Date Range Selection', 'dataOrg': 'Condensing Type'})
 
   useEffect(()=>{
-    updateGraphObject()
-  }, [])
+    updateGraphObject(<CreateGraph key={1} organization={dataOrg} graphYAxis={graphYAxis} graphType={graphType} rangeType={rangeType}/>)
+  }, [clickToUpdate])
 
-  const dataOptions = {
+  const dataOptions = [{
     'PingTest Average':'pingAvg',
     'PingTest Max':'pingMax',
     'PingTest Min':'pingMin',
@@ -20,28 +25,85 @@ export default function App() {
     'PingTest Standard Deviation':'pingStdDev',
     'PingTest Mean':'pingMean',
     'SpeedTest Ping':'sTping',
-    'SpeedTest Download':'sTmax',
-    'SpeedTest Upload':'sTmin',
-  }
-  const graphTypes = {
+    'SpeedTest Download':'sTdown',
+    'SpeedTest Upload':'sTup',
+  },{
+    'pingAvg':'PingTest Average',
+    'pingMax':'PingTest Max',
+    'pingMin':'PingTest Min',
+    'pingLoss':'PingTest Loss',
+    'pingStdDev':'PingTest Standard Deviation',
+    'pingMean':'PingTest Mean',
+    'sTping':'SpeedTest Ping',
+    'sTdown':'SpeedTest Download',
+    'sTup':'SpeedTest Upload',
+  }]
+  const graphTypes = [{
     'Line Graph':'line',
     'Bar Graph':'bar'
-  }
-  const dataOrg = {
+  },{
+    'line':'Line Graph',
+    'bar':'Bar Graph'
+  }]
+  const dataOrgTypes = [{
     'Average':'avg',
-    'Standard Deviation':'stddev',
-    'Mean':'mean'
+    'Standard Deviation':'stddev'
+  }, {
+    'avg':'Average',
+    'stddev':'Standard Deviation'
+  }]
+  const rangeTypes = [{
+    'All Dates': 'allDates',
+    'Single Day':'selectDate',
+    'Range of Dates':'dateRange'
+  },{
+    'allDates':'All Dates',
+    'selectDate': 'Single Day',
+    'dateRange': 'Range of Dates'
+  }] 
+
+  const dropDownUpdate = (dropDownLocal,item) => {
+    switch (dropDownLocal){
+      case 'graphType':
+        updateGraphType(graphTypes[0][item])
+        updateDropDown(dropDownObject => ({...dropDownObject, 'graphType': item}))
+        break;
+      case 'graphYAxis':
+        updateYAxis(dataOptions[0][item])
+        updateDropDown(dropDownObject => ({...dropDownObject, 'graphYAxis': item}))
+        break;
+      case 'rangeType':
+        updateRangeType(rangeTypes[0][item])
+        updateDropDown(dropDownObject => ({...dropDownObject, 'rangeType':item}))
+        break;
+      case 'dataOrg':
+        updateDataOrg(dataOrgTypes[0][item])
+        updateDropDown(dropDownObject => ({...dropDownObject, 'dataOrg':item}))
+        if(rangeType === "allDates"){
+          updateGenGraph(true)
+        }
+        break;
+      default:
+        break; 
+    }
+  }
+
+  const getGraphOject = () => {
+    updateGenGraph(false)
+    updateClick(clickToUpdate + 1)
+    updateGraphObject(<CreateGraph key={1} organization={dataOrg} graphYAxis={graphYAxis} graphType={graphType} rangeType={rangeType}/>)
   }
 
   return (
     <div className="main-content">
       <nav>
-        <button>Graph1</button>
-        <button>Graph2</button>
-        <button>Graph3</button>
-        <button>Graph4</button>
+        <DropDown dropDownType={'graphType'} dropDownIntial={dropDownObject['graphType']} buttonSelection={Object.keys(graphTypes[0])} stateUpdate={dropDownUpdate}/>
+        <DropDown dropDownType={'graphYAxis'} dropDownIntial={dropDownObject['graphYAxis']} buttonSelection={Object.keys(dataOptions[0])} stateUpdate={dropDownUpdate}/>
+        <DropDown dropDownType={'rangeType'} dropDownIntial={dropDownObject['rangeType']} buttonSelection={Object.keys(rangeTypes[0])} stateUpdate={dropDownUpdate}/>
+        {rangeType !== 'selectDate' && <DropDown dropDownType={'dataOrg'} dropDownIntial={dropDownObject['dataOrg']} buttonSelection={Object.keys(dataOrgTypes[0])} stateUpdate={dropDownUpdate}/>}
+        {showGenerateGraph && <button onClick={()=>{getGraphOject()}}>Generate Graph</button>}
       </nav>
-      <CreateGraph key={1} organization={orgData} graphYAxis={graphYAxis} graphType={graphType} graphDateRange={'allDates'}/>
+      {graphObject}
     </div>
   );
 }

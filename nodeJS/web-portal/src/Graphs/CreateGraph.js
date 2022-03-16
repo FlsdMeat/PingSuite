@@ -1,25 +1,55 @@
 import { useEffect, useState } from "react"
 import {Line} from 'react-chartjs-2';
+import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
 import FullLineGraph from './LineGraphs/FullLineGraph.js'
 Chart.register(...registerables);
 
-export default function CreateGraph({organization,graphYAxis, graphType, graphDateRange}){
+export default function CreateGraph({organization,graphYAxis, graphType, rangeType, dateRange}){
     const [graphPoints, updateGraphPoints] = useState({})
     const [ready, GraphReady] = useState(false)
 
     useEffect(()=>{
         getGraphData()
-    }, [])
+    }, [organization,graphYAxis, graphType, rangeType, dateRange])
 
     const getGraphData = async () => {
-        if(graphDateRange === 'allDates'){
-            if(graphType === 'line'){
-                let graphData = await FullLineGraph(graphYAxis, organization)
-                updateGraphPoints(graphData)
-                GraphReady(true)
-            }
+        if(rangeType === 'allDates'){
+            await axios.get(`http://localhost:8080/api/pingResults/allDates/${graphType}_${graphYAxis}_${organization}`)
+                .then(async res=>{
+                    if(res.data !== false){
+                        updateGraphPoints(res.data)
+                        console.log(res.data)
+                        GraphReady(true)
+                    }
+            })
+        } else {
+            await axios.get(`http://localhost:8080/api/pingResults/${rangeType}/${dateRange}/${graphType}_${graphYAxis}_${organization}`)
+                .then(async res=>{
+                    if(res.data !== false){
+                        updateGraphPoints(res.data)
+                        console.log(res.data)
+                        GraphReady(true)
+                    }
+            })
         }
+    }
+
+    const getXAxisText = () =>{
+        let text = ""
+        if(rangeType === 'allDates'){
+            text = `Date Range: All Dates;`
+        } else if (rangeType === 'singleDate'){
+            text = `Date Range: Single Day [ ${dateRange.replaceAll('_', ' ')} ];`
+        } else if (rangeType === 'dateRange'){
+            text = `Date Range: ${dateRange.replaceAll('_', ' ').replace('?', ' to ')};`
+        }
+        if (organization === 'avg'){
+            text += ` Condensed by: Average;`
+        } else if (organization === 'stddev'){
+            text += ` Condensed by: Standard Deviation;`
+        }
+        return text
     }
 
     const titles = {
@@ -27,9 +57,9 @@ export default function CreateGraph({organization,graphYAxis, graphType, graphDa
         'pingStdDev': 'Standard Deveation',
         'pingMax': 'Maximum Ping',
         'pingMin': 'Minimum Ping',
-        'sTdown': 'SpeedTest.net Download',
-        'sTup': 'SpeedTest.net Upload',
-        'sTping': 'SpeedTest.net Ping'
+        'sTdown': 'SpeedTest Download',
+        'sTup': 'SpeedTest Upload',
+        'sTping': 'SpeedTest Ping'
     }
     const xTitles = {
         'stddev':'Standard Deviation',
@@ -66,7 +96,7 @@ export default function CreateGraph({organization,graphYAxis, graphType, graphDa
                 xAxes:{
                     title:{
                         display:true,
-                        text:`Date Range: ${dateRangeTitles[graphDateRange]}; Data condensed by ${xTitles[organization]}`,
+                        text:getXAxisText,
                         color:'white'
                     },
                     grid:{
@@ -89,7 +119,7 @@ export default function CreateGraph({organization,graphYAxis, graphType, graphDa
                 title: {
                     display: true,
                     color:'white',
-                    text: `${titles[graphYAxis]} over ${dateRangeTitles[graphDateRange]}`
+                    text: `${titles[graphYAxis]} over ${dateRangeTitles[rangeType]}`
                 },
             
             }

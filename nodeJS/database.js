@@ -104,4 +104,21 @@ async function getPingResults(){
         return false
     }
 }
-module.exports = {uploadSpeedTest, getPingResults}
+
+async function getCurrentDeviceDetails(){
+    let db, res;
+    db = await pool.getConnection();
+    try {
+        res = await db.query(
+            `SELECT * FROM Devices;`
+        )
+        delete res[`meta`]
+        db.end();
+        return res
+    } catch (error) {
+        databaseLog(`Error with getPingResults`,error)
+        db.end();
+        return false
+    }
+}
+module.exports = {uploadSpeedTest, getPingResults, getCurrentDeviceDetails}

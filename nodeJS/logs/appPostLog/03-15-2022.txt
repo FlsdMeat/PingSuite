@@ -1,0 +1,9 @@
+[23:31:18][appPostLog]: [AppGet pingResults]: Error with parsing JSON
+Stacktrace:
+                            ==========================
+Error: retrieve connection from pool timeout after 10002ms
+    at Object.module.exports.createError (C:\Users\Colin\Documents\Work\PingTest\nodeJS\node_modules\mariadb\lib\misc\errors.js:61:10)
+    at timeoutTask (C:\Users\Colin\Documents\Work\PingTest\nodeJS\node_modules\mariadb\lib\pool-base.js:319:16)
+    at Timeout.rejectAndResetTimeout [as _onTimeout] (C:\Users\Colin\Documents\Work\PingTest\nodeJS\node_modules\mariadb\lib\pool-base.js:342:5)
+    at listOnTimeout (node:internal/timers:561:11)
+    at processTimers (node:internal/timers:502:7)

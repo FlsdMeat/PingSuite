@@ -1,0 +1,30 @@
+.usefulItems_dropdown01{
+    width:100px;
+    width:fit-content;
+}
+.usefulItems_dropdown01 button{
+    border:none;
+    text-decoration: none;
+}
+.usefulItems_dropdown01_initialTitle{
+    background-color: hsl(218, 19%, 42%);
+    border-radius: 2px;
+    font-family: sans-serif;
+    color:white;
+    margin:2px;
+}
+.usefulItems_dropdown01_dropdown{
+    width:100px;
+    position:absolute;
+    flex-direction: column;
+    padding-left: 2px;
+}
+.usefulItems_dropdown01_item{
+    background-color: hsl(218, 18%, 52%);
+    border-radius: 2px;
+    font-family: sans-serif;
+    color:white;
+}
+.usefulItems_dropdown01_item:hover{
+    background-color: hsl(218, 17%, 41%);
+}
