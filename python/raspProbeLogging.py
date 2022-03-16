@@ -1,26 +1,42 @@
 from datetime import datetime, date
 import os
 
-def general(status):
-    return
+def general(who, error):
+    errorLog = "[%s][%s]: %s"%(getTime("time", "generalError"), who, error)
+    print(errorLog)
+    writeLog(errorLog, "networking")
 
-def network(status):
-    networkLog = "[%s][Networking]: %s"%(getTime("time","raspProbeLogging network"), status)
-    print(networkLog)
-    writeLog(networkLog, "networking")
+def network(status, error):
+    if status == "ERROR":
+        general("Networking", error)
+    else:
+        networkLog = "[%s][Networking]: %s"%(getTime("time","raspProbeLogging network"), status)
+        print(networkLog)
+        writeLog(networkLog, "networking")
 
-def pingTest(status):
-    pingLog = "[%s][PingTest]: %s"%(getTime("time", "raspProbeLogging pingTest"), status)
-    print(pingLog)
-    writeLog(pingLog, "pingTest")
+def pingTest(status, error):
+    if status == "ERROR":
+        general("PingTest", error)
+    else:
+        pingLog = "[%s][PingTest]: %s"%(getTime("time", "raspProbeLogging pingTest"), status)
+        print(pingLog)
+        writeLog(pingLog, "pingTest")
 
-def speedTest(status):
-    sTlog = "[%s][SpeedTest]: %s"%(getTime("time", "raspProbeLogging speedTest"), status)
-    print(sTlog)
-    writeLog(sTlog, "speedTest")
+def speedTest(status, error):
+    if status == "ERROR":
+        general("SpeedTest", error)
+    else:
+        sTlog = "[%s][SpeedTest]: %s"%(getTime("time", "raspProbeLogging speedTest"), status)
+        print(sTlog)
+        writeLog(sTlog, "speedTest")
 
-def database(status):
-    return
+def database(status, error):
+    if status == "ERROR":
+        general("Database", error)
+    else:
+        sTlog = "[%s][Database]: %s"%(getTime("time", "raspProbeLogging speedTest"), status)
+        print(sTlog)
+        writeLog(sTlog, "speedTest")
 
 def error(err):
     print(err)
