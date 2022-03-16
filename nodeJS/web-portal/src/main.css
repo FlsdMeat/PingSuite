@@ -1,7 +1,7 @@
 .GraphData{
     width:75%;
+    color:white;
 }
 body{
     background-color: hsl(217, 16%, 28%);
-    background-color: white;
 }

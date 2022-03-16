@@ -48,7 +48,44 @@ const getPrefix = (num) => {
         return num + 'th'
     }
 }
-app.get('/api/pingResults', async (req, res) => {
+app.get('/api/pingResults/*', async (req, res) => {
+    try {
+        let url = req.url.substring(req.url.indexOf('pingResults') + 12)
+        if(url === 'allDates'){
+            if (Object.keys(cache).length == 0){
+                let pingResults = await getPingResults();
+                let data = {}
+                pingResults.forEach(item => {
+                    if (item.deviceID in data === false){
+                        data[item.deviceID] = {}
+                        data[item.deviceID]["DeviceName"] = item.DeviceName
+                    }
+                    let tempItem = {}
+                    Object.assign(tempItem, item)
+                    let date = item.datetime
+                    date = date.toString().split(' ')
+                    let time = date[4]
+                    date = [date[1], date[2], date[3]]
+                    date = `${date[0]} ${date[1]}, ${date[2]}`
+                    if(!(date in data[item.deviceID])){
+                        data[item.deviceID][date] = {}
+                    }
+                    delete tempItem.DeviceName
+                    delete tempItem.MacAddress
+                    delete tempItem.deviceID
+                    delete tempItem.datetime
+                    data[item.deviceID][date][time] = tempItem
+                })
+                cache['allDates'] = data
+            }
+            return res.send(cache['allDates'])
+        }
+    } catch (error) {
+        appPostLog(`[AppGet pingResults]: Error with parsing JSON`,error)
+        return res.json(false)
+    }
+})
+app.get('/api/deviceDetails', async (req, res) => {
     try {
         if (Object.keys(cache).length == 0){
             let pingResults = await getPingResults();
@@ -82,6 +119,17 @@ app.get('/api/pingResults', async (req, res) => {
         return res.json(false)
     }
 })
+const resetCache = () =>{
+    setTimeout(() => {
+        try {
+            Object.keys(cache).forEach(item=>{
+                delete cache[item]
+            })
+        } catch (error) {}
+        resetCache()
+    }, process.env.CACHE_RESET);
+}
+resetCache()
 
 function sendToDatabase(data){
     let speedTest = data.SpeedTest

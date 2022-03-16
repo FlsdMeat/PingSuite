@@ -96,11 +96,11 @@ async function getPingResults(){
             `SELECT * FROM PingResultsView;`
         )
         delete res[`meta`]
-        db.close();
+        db.end();
         return res
     } catch (error) {
         databaseLog(`Error with getPingResults`,error)
-        db.close();
+        db.end();
         return false
     }
 }
