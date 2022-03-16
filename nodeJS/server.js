@@ -117,7 +117,6 @@ app.get('/api/pingResults/*', async (req, res) => {
             } else {
                 return res.send(cache[url])
             }
-            console.log(graphParams)
             return res.send(graphParams)
         }
         if(urlArr[0] === 'allDates'){
@@ -126,7 +125,6 @@ app.get('/api/pingResults/*', async (req, res) => {
                 let graphParams = {}
                 if(urlGraph[0] === 'line'){
                     graphParams = await LineGraph(cache['allDates'], urlGraph[1], urlGraph[2])
-                    console.log(graphParams)
                 } else if (urlGraph [0] === 'bar'){
                     graphParams = await LineGraph(cache['allDates'], urlGraph[1], urlGraph[2])
                 } else {

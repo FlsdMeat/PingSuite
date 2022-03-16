@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import {Line} from 'react-chartjs-2';
 import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
-import FullLineGraph from './LineGraphs/FullLineGraph.js'
 Chart.register(...registerables);
 
 export default function CreateGraph({organization,graphYAxis, graphType, rangeType, dateRange}){
@@ -15,7 +14,7 @@ export default function CreateGraph({organization,graphYAxis, graphType, rangeTy
 
     const getGraphData = async () => {
         if(rangeType === 'allDates'){
-            await axios.get(`http://localhost:8080/api/pingResults/allDates/${graphType}_${graphYAxis}_${organization}`)
+            await axios.get(`/api/pingResults/allDates/${graphType}_${graphYAxis}_${organization}`)
                 .then(async res=>{
                     if(res.data !== false){
                         updateGraphPoints(res.data)
@@ -24,7 +23,7 @@ export default function CreateGraph({organization,graphYAxis, graphType, rangeTy
                     }
             })
         } else {
-            await axios.get(`http://localhost:8080/api/pingResults/${rangeType}/${dateRange}/${graphType}_${graphYAxis}_${organization}`)
+            await axios.get(`/api/pingResults/${rangeType}/${dateRange}/${graphType}_${graphYAxis}_${organization}`)
                 .then(async res=>{
                     if(res.data !== false){
                         updateGraphPoints(res.data)

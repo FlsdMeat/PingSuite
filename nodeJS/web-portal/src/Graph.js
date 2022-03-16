@@ -1,6 +1,6 @@
 import './main.css';
 import {useEffect, useState} from 'react';
-import CreateGraph from './Graphs/CreateGraph.js'
+import CreateGraph from './CreateGraph.js'
 import DropDown from './Useful Items/DropDowns/DropDown.js';
 
 export default function App() {
