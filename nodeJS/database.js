@@ -3,7 +3,7 @@ const { databaseLog } = require('./logging.js')
 const mariadb = require('mariadb')
 const pool = mariadb.createPool({
     host:process.env.DB_HOST,
-    user:process.env.DB_StaffUSER,
+    user:process.env.DB_HomeUSER,
     password:process.env.DB_HomePW,
     database:process.env.DB_DATABASE,
     connectionLimit:4
@@ -96,11 +96,11 @@ async function getPingResults(){
             `SELECT * FROM PingResultsView;`
         )
         delete res[`meta`]
-        db.close();
+        db.end();
         return res
     } catch (error) {
         databaseLog(`Error with getPingResults`,error)
-        db.close();
+        db.end();
         return false
     }
 }
