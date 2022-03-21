@@ -14,7 +14,7 @@ export default function CreateGraph({organization,graphYAxis, graphType, rangeTy
 
     const getGraphData = async () => {
         if(rangeType === 'allDates'){
-            await axios.get(`api/pingResults/allDates/${graphType}_${graphYAxis}_${organization}`)
+            await axios.get(`/api/pingResults/allDates/${graphType}_${graphYAxis}_${organization}`)
                 .then(async res=>{
                     if(res.data !== false){
                         updateGraphPoints(res.data)
