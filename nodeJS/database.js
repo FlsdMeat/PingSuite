@@ -1,13 +1,24 @@
 require('dotenv').config()
 const { databaseLog } = require('./logging.js')
 const mariadb = require('mariadb')
-const pool = mariadb.createPool({
-    host:process.env.DB_HOST,
-    user:process.env.DB_HomeUSER,
-    password:process.env.DB_HomePW,
-    database:process.env.DB_DATABASE,
-    connectionLimit:4
-})
+let pool;
+if(process.env.NODE_ENV == 'production'){
+    pool = mariadb.createPool({
+        host:process.env.DB_HOST,
+        user:process.env.DB_USER,
+        password:process.env.DB_PW,
+        database:process.env.DB_DATABASE,
+        connectionLimit:4
+    })
+} else {
+    pool = mariadb.createPool({
+        host:process.env.DB_HOST,
+        user:process.env.DB_HomeUSER,
+        password:process.env.DB_HomePW,
+        database:process.env.DB_DATABASE,
+        connectionLimit:4
+    })
+}
 
 function date(dateType, daysPrev){
     let date_time = new Date();
@@ -72,8 +83,8 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){
     if(deviceCheck){
         try {
             res = await db.query(
-                `INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingStdDev, sTdown,sTup,sTping) 
-                VALUES (${deviceCheck}, '${date('date')} ${date('time')}', ${pingTest['min']}, ${pingTest['avg']}, ${pingTest['max']}, ${pingTest['stddev'].toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${speedTest['ping'].limitTo(2)})`
+                `INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${pingTest['stddev'].toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${speedTest['ping'].toFixed(2)})`
             )
             delete res['meta']
             databaseLog(`${deviceName} latest ping was delievered to the database!`)
