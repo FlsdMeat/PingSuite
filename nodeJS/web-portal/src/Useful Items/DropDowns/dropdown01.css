@@ -5,23 +5,26 @@
 .usefulItems_dropdown01 button{
     border:none;
     text-decoration: none;
+    width:140px;
 }
 .usefulItems_dropdown01_initialTitle{
+    width:100px;
     background-color: hsl(218, 19%, 42%);
     border-radius: 2px;
     font-family: sans-serif;
     color:white;
     margin:2px;
+    margin-bottom: 0px;
 }
 .usefulItems_dropdown01_dropdown{
-    width:100px;
-    position:absolute;
     flex-direction: column;
-    padding-left: 2px;
+    margin-left: 2px;
+    border:2px black solid;
+    position: absolute;
 }
 .usefulItems_dropdown01_item{
     background-color: hsl(218, 18%, 52%);
-    border-radius: 2px;
+    border-left: 2px black solid;
     font-family: sans-serif;
     color:white;
 }

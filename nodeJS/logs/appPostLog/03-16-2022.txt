@@ -163,3 +163,87 @@ Stacktrace:
 TypeError: Cannot read properties of undefined (reading 'forEach')
     at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:62:34
     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[20:14:53][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+TypeError: time[graphType].length is not a function
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:140:48
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:135:58
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:132:44
+    at Array.map (<anonymous>)
+    at getGraphData (C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:91:43)
+    at findGraphPoints (C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:175:12)
+    at LineGraph (C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:11:18)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:127:41
+[20:15:25][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+ReferenceError: temp is not defined
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:141:33
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:135:58
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:132:44
+    at Array.map (<anonymous>)
+    at getGraphData (C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:91:43)
+    at findGraphPoints (C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:175:12)
+    at LineGraph (C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:11:18)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:127:41
+[20:17:26][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+ReferenceError: Cannot access 'temp' before initialization
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:104:33
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:98:58
+    at Array.forEach (<anonymous>)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:95:44
+    at Array.map (<anonymous>)
+    at getGraphData (C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:91:43)
+    at findGraphPoints (C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:175:12)
+    at LineGraph (C:\Users\Colin\Documents\Work\PingTest\nodeJS\GraphAPI\LineGraph.js:11:18)
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:127:41
+[22:21:3][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'forEach')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:62:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[22:37:40][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'split')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:107:42
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[22:38:56][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'split')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:107:42
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[22:57:34][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'forEach')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:62:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[23:15:56][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'forEach')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:62:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[23:15:58][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'forEach')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:62:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[23:17:41][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+TypeError: Cannot read properties of undefined (reading 'forEach')
+    at C:\Users\Colin\Documents\Work\PingTest\nodeJS\server.js:62:34
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)

@@ -1,5 +1,4 @@
-async function LineGraph(graphData, graphType,organization){
-
+async function LineGraph(graphData, url, graphParams){
     const getRandomColor = () =>{
       return [Math.floor(Math.random() * (256 - 100) + 100), Math.floor(Math.random() * (256 - 100) + 100), Math.floor(Math.random() * (256 - 100) + 100)]
     }
@@ -8,11 +7,11 @@ async function LineGraph(graphData, graphType,organization){
     Object.keys(graphData).forEach(deviceID=>{
         graphData[deviceID]['color'] = getRandomColor()
     })
-    data = await findGraphPoints(graphData, graphType, organization)
+    data = await findGraphPoints(graphData, url,graphParams)
     return data
 }
   
-async function findGraphPoints(graphData, graphType, organization){
+async function findGraphPoints(graphData, url,graphParams){
     const getDateLabels = () => {
         let dates = {}
         Object.keys(graphData).forEach(device=>{
@@ -74,9 +73,25 @@ async function findGraphPoints(graphData, graphType, organization){
     }
     const getGraphData = () => {
         let timeZoom = "days" // over a single 'day', multiple 'days', single month, multiple months, single year, multiple years
-        let findDates = getDateLabels();
+        let rangeType, dateRange, graphYAxis, dataOrg;
+        if( url[0] === 'allDates'){
+            rangeType = url[0]
+            graphYAxis = graphParams[1]
+            dataOrg = graphParams[2]
+        } else {
+            rangeType = url[0]
+            dateRange = url[1]
+            graphYAxis = graphParams[1]
+            dataOrg = graphParams[2]
+            console.log(rangeType, dateRange, graphYAxis, dataOrg)
+        }
         let labels = [], labelsObj = {},
             datasets = [];
+        if (rangeType !== 'selectDate'){
+
+        }else {
+            let findDates = getDateLabels();
+        }
         if (timeZoom === "days"){
         Object.keys(findDates).forEach(year =>{
             Object.keys(findDates[year]).forEach(month =>{
@@ -91,16 +106,20 @@ async function findGraphPoints(graphData, graphType, organization){
         datasets = Object.keys(graphData).map( (device, index) => {
         let tempDataObj = {}
         
-        if(organization === 'stddev'){
+        if(dataOrg === 'stddev'){
             Object.keys(graphData[device]).forEach( (date) => {
                 let sumOfData = 0;
                 if(date.substring(0, date.indexOf(',')) in labelsObj){
                     Object.keys(graphData[device][date]).forEach(time => {
                         time = graphData[device][date][time]
-                        if(graphType === 'sTdown' || graphType === 'sTup'){
-                            sumOfData += time[graphType] / 1000000
-                        } else {
-                            sumOfData += time[graphType]
+                        if(graphYAxis === 'sTdown' || graphYAxis === 'sTup'){
+                            sumOfData += time[graphYAxis] / 1000000
+                        } else if (graphYAxis === 'pingLoss'){
+                            if(time[graphYAxis].length !== 0){
+                                sumOfData += parseInt(time[graphYAxis].replace('%', ''))
+                            }
+                        }  else {
+                            sumOfData += time[graphYAxis]
                         }
                     })
                     let mean = sumOfData / Object.keys(graphData[device][date]).length
@@ -108,15 +127,18 @@ async function findGraphPoints(graphData, graphType, organization){
                     let stddev = 0
                     Object.keys(graphData[device][date]).forEach(time => {
                         time = graphData[device][date][time]
-                        if(graphType === 'sTdown' || graphType === 'sTup'){
-                            temp += time[graphType] / 1000000
+                        if(graphYAxis === 'sTdown' || graphYAxis === 'sTup'){
+                            temp += time[graphYAxis] / 1000000
+                        } else if (graphYAxis === 'pingLoss'){
+                            if(time[graphYAxis].length !== 0){
+                                temp += parseInt(time[graphYAxis].replace('%', ''))
+                            }
                         } else {
-                            temp += time[graphType]
+                            temp += time[graphYAxis]
                         }
                         stddev += (temp - mean)**2
                     })
                     stddev = Math.sqrt(stddev / Object.keys(graphData[device][date]).length)
-                    console.log(stddev)
                     tempDataObj[date.substring(0, date.indexOf(','))] = stddev
                 }
             })
@@ -126,10 +148,14 @@ async function findGraphPoints(graphData, graphType, organization){
                 if(date.substring(0, date.indexOf(',')) in labelsObj){
                     Object.keys(graphData[device][date]).forEach(time => {
                         time = graphData[device][date][time]
-                        if(graphType === 'sTdown' || graphType === 'sTup'){
-                        average += time[graphType] / 1000000
+                        if(graphYAxis === 'sTdown' || graphYAxis === 'sTup'){
+                        average += time[graphYAxis] / 1000000
+                        } else if (graphYAxis === 'pingLoss'){
+                            if(time[graphYAxis].length !== 0){
+                                average += parseInt(time[graphYAxis].replace('%', ''))
+                            }
                         } else {
-                        average += time[graphType]
+                        average += time[graphYAxis]
                         }
                     })
                     average = average / Object.keys(graphData[device][date]).length

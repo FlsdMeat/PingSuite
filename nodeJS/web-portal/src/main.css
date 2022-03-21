@@ -1,6 +1,11 @@
+.GraphContainer{
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .GraphData{
-    width:75%;
-    color:white;
+    width:95%;
 }
 body{
     background-color: hsl(217, 16%, 28%);
@@ -10,4 +15,10 @@ nav{
     flex-direction: row;
     width:100%;
     position: relative;
+    height:20px;
+}
+nav > div{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
 }

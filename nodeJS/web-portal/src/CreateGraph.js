@@ -14,7 +14,7 @@ export default function CreateGraph({organization,graphYAxis, graphType, rangeTy
 
     const getGraphData = async () => {
         if(rangeType === 'allDates'){
-            await axios.get(`/api/pingResults/allDates/${graphType}_${graphYAxis}_${organization}`)
+            await axios.get(`http://localhost:8080/api/pingResults/allDates/${graphType}_${graphYAxis}_${organization}`)
                 .then(async res=>{
                     if(res.data !== false){
                         updateGraphPoints(res.data)
@@ -23,7 +23,12 @@ export default function CreateGraph({organization,graphYAxis, graphType, rangeTy
                     }
             })
         } else {
-            await axios.get(`/api/pingResults/${rangeType}/${dateRange}/${graphType}_${graphYAxis}_${organization}`)
+            let dates = ''
+            if(rangeType === 'selectDate'){
+                let temp = dateRange.toString().split(' ')
+                dates = `${temp[1]}_${temp[2]},_${temp[3]}`
+            }
+            await axios.get(`http://localhost:8080/api/pingResults/${rangeType}/${dates}/${graphType}_${graphYAxis}_${organization}`)
                 .then(async res=>{
                     if(res.data !== false){
                         updateGraphPoints(res.data)
@@ -54,6 +59,7 @@ export default function CreateGraph({organization,graphYAxis, graphType, rangeTy
     const titles = {
         'pingAvg': 'Average Ping',
         'pingStdDev': 'Standard Deveation',
+        'pingLoss': 'Loss in %',
         'pingMax': 'Maximum Ping',
         'pingMin': 'Minimum Ping',
         'sTdown': 'SpeedTest Download',

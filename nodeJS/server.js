@@ -97,44 +97,47 @@ app.get('/api/pingResults/*', async (req, res) => {
         let urlGraph = []
         if(cache[url] !== undefined){
             if(url[0] === 'allDates'){
-                if(url[1] !== undefined){
+                try {
                     urlGraph = urlArr[1].split('_')
-                }else {
+                } catch (error) {
                     return res.send(cache[url])
                 }
             } else {
-                if(url[2] !== undefined){
+                try {
                     urlGraph = urlArr[2].split('_')
-                }else {
+                } catch (error) {
                     return res.send(cache[url])
                 }
             }
             let graphParams = {}
             if(urlGraph[0] === 'line'){
-                graphParams = await LineGraph(cache[url], urlGraph[1], urlGraph[2])
+                console.log(url)
+                graphParams = await LineGraph(cache[url], urlArr, urlGraph)
+                console.log(graphParams)
             } else if (urlGraph [0] === 'bar'){
-                graphParams = await LineGraph(cache[url], urlGraph[1], urlGraph[2])
+                graphParams = await LineGraph(cache[url], urlArr, urlGraph)
             } else {
                 return res.send(cache[url])
             }
             return res.send(graphParams)
         }
         if(urlArr[0] === 'allDates'){
-            if(urlArr[1] !== undefined){
+            try{
                 urlGraph = urlArr[1].split('_')
                 let graphParams = {}
                 if(urlGraph[0] === 'line'){
-                    graphParams = await LineGraph(cache['allDates'], urlGraph[1], urlGraph[2])
+                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
                 } else if (urlGraph [0] === 'bar'){
-                    graphParams = await LineGraph(cache['allDates'], urlGraph[1], urlGraph[2])
+                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
                 } else {
                     return res.send(cache['allDates'])
                 }
                 return res.send(graphParams)
-            } else {
+            } catch(error) {
                 return res.send(cache['allDates'])
             }
-        }else if (urlArr[0] === 'singleDate'){
+        }else if (urlArr[0] === 'selectDate'){
+            console.log(url)
             let data = {}
             urlArr[1] = urlArr[1].replaceAll("_", " ")
             Object.keys(cache['allDates']).forEach(deviceID=>{
@@ -148,18 +151,18 @@ app.get('/api/pingResults/*', async (req, res) => {
                 data[deviceID][urlArr[1]] = currentDevice[urlArr[1]]
             })
             cache[url] = data
-            if(urlArr[2] !== undefined){
+            try{
                 urlGraph = urlArr[2].split('_')
                 let graphParams = {}
                 if(urlGraph[0] === 'line'){
-                    graphParams = await LineGraph(cache[url], urlGraph[1], urlGraph[2])
+                    graphParams = await LineGraph(cache[url], urlArr, urlGraph)
                 } else if (urlGraph [0] === 'bar'){
-                    graphParams = await LineGraph(cache[url], urlGraph[1], urlGraph[2])
+                    graphParams = await LineGraph(cache[url], urlArr, urlGraph)
                 } else {
                     return res.send(cache[url])
                 }
                 return res.send(graphParams)
-            } else {
+            } catch(error) {
                 return res.send(cache[url])
             }
         }else if (urlArr[0] === 'dateRange'){
@@ -210,18 +213,18 @@ app.get('/api/pingResults/*', async (req, res) => {
                 }
             })
             cache[url] = data
-            if(urlArr[2] !== undefined){
+            try {
                 urlGraph = urlArr[2].split('_')
                 let graphParams = {}
                 if(urlGraph[0] === 'line'){
-                    graphParams = await LineGraph(cache[url], urlGraph[1], urlGraph[2])
+                    graphParams = await LineGraph(cache[url], urlArr, urlGraph)
                 } else if (urlGraph [0] === 'bar'){
-                    graphParams = await LineGraph(cache[url], urlGraph[1], urlGraph[2])
+                    graphParams = await LineGraph(cache[url], urlArr, urlGraph)
                 } else {
                     return res.send(cache[url])
                 }
                 return res.send(graphParams)
-            } else {
+            } catch (error) {
                 return res.send(cache[url])
             }
         }

@@ -12,9 +12,9 @@ export default function DropDown({dropDownType, dropDownIntial, buttonSelection,
         return buttons
     }
     return (
-        <div className="usefulItems_dropdown01">
+        <div className="usefulItems_dropdown01"  onMouseLeave={()=>{updateDropDownDisplay("none")}}>
             <button className="usefulItems_dropdown01_initialTitle" onMouseOver={()=>{updateDropDownDisplay("flex")}}>{dropDownIntial}</button>
-            <div className="usefulItems_dropdown01_dropdown" style={{display:displayDrop}} onMouseLeave={()=>{updateDropDownDisplay("none")}}>
+            <div className="usefulItems_dropdown01_dropdown" style={{display:displayDrop}}>
                 {getSelection()}
             </div>
         </div>
