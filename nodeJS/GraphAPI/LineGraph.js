@@ -7,7 +7,6 @@ async function LineGraph(graphData, url, graphParams){
     Object.keys(graphData).forEach(deviceID=>{
         graphData[deviceID]['color'] = getRandomColor()
     })
-    console.log('here2')
     if(url[0] === 'allDates'){
         data = await findGraphPointsAllDates(graphData, url,graphParams)
     } else if (url[0] === 'selectDate'){
@@ -15,23 +14,21 @@ async function LineGraph(graphData, url, graphParams){
     } else if (url[0] === 'dateRange'){
         data = await findGraphPointsDateRange(graphData, url,graphParams)
     }
-    console.log('here3')
     return data
 }
   
 async function findGraphPointsAllDates(graphData, url,graphParams){
     const getGraphData = () => {
         let timeZoom = "days" // over a single 'day', multiple 'days', single month, multiple months, single year, multiple years
-        let rangeType, graphYAxis, condese, organization;
+        let rangeType, graphYAxis, condense, organization;
         rangeType = url[0]
         graphYAxis = graphParams[1]
-        condese = graphParams[2]
+        condense = graphParams[2]
         organization = graphParams[3]
         let labels = [], labelsObj = {},
             datasets = [];
         let findDates = getLabelsAllDates(graphData);
         if (timeZoom === "days"){
-            console.log(findDates)
             Object.keys(findDates).forEach(year =>{
                 Object.keys(findDates[year]).forEach(month =>{
                     Object.keys(findDates[year][month]).forEach(day =>{
@@ -42,9 +39,9 @@ async function findGraphPointsAllDates(graphData, url,graphParams){
             })
         }
         labels = sortAllDates(labels)
-        if(organization === 'devices'){
-            datasets = dataSetsAllDatesDevices(graphData)
-        } else if (organization === 'buildings'){
+        if(organization === 'device'){
+            datasets = dataSetsAllDatesDevices(graphData, graphYAxis, condense, labels, labelsObj)
+        } else if (organization === 'building'){
             datasets = datasetsAllDatesBuildings(graphData)
         }
 
@@ -127,7 +124,6 @@ async function findGraphPointsSelectDate(){
             datasets = [];
         let findDates = getDateLabels();
         if (timeZoom === "days"){
-            console.log(findDates)
             Object.keys(findDates).forEach(year =>{
                 Object.keys(findDates[year]).forEach(month =>{
                     Object.keys(findDates[year][month]).forEach(day =>{
@@ -137,7 +133,6 @@ async function findGraphPointsSelectDate(){
                 })
             })
         }
-        console.log('here4')
         labels = sortLabels(labels)
         datasets = Object.keys(graphData).map( (device, index) => {
         let tempDataObj = {}
@@ -294,7 +289,6 @@ async function findGraphPointsDateRange(){
             datasets = [];
         let findDates = getDateLabels();
         if (timeZoom === "days"){
-            console.log(findDates)
             Object.keys(findDates).forEach(year =>{
                 Object.keys(findDates[year]).forEach(month =>{
                     Object.keys(findDates[year][month]).forEach(day =>{
@@ -304,7 +298,6 @@ async function findGraphPointsDateRange(){
                 })
             })
         }
-        console.log('here4')
         labels = sortLabels(labels)
         datasets = Object.keys(graphData).map( (device, index) => {
         let tempDataObj = {}
@@ -454,10 +447,10 @@ function sortAllDates(arr){
     return sortLabels(arr)
 }
 
-function dataSetsAllDatesDevices(graphData){
-    Object.keys(graphData).map( (device, index) => {
+function dataSetsAllDatesDevices(graphData, graphYAxis, condense, labels, labelsObj){
+    return Object.keys(graphData).map( (device, index) => {
         let tempDataObj = {}
-        if(condese === 'stddev'){
+        if(condense === 'stddev'){
             Object.keys(graphData[device]).forEach( (date) => {
                 let sumOfData = 0;
                 if(date.substring(0, date.indexOf(',')) in labelsObj){
@@ -517,11 +510,12 @@ function dataSetsAllDatesDevices(graphData){
         let tempDataArr = []
         labels.forEach(date => {
             if(!(date in tempDataObj)){
-            tempDataArr.push(0)
+                tempDataArr.push(0)
             } else {
-            tempDataArr.push(tempDataObj[date])
+                tempDataArr.push(tempDataObj[date])
             }
         })
+
         let color = graphData[device]['color']
         return{
             id: index + 1,
@@ -533,10 +527,10 @@ function dataSetsAllDatesDevices(graphData){
     })
 }
 
-function datasetsAllDatesBuildings(graphData){
+function datasetsAllDatesBuildings(graphData,condense){
     Object.keys(graphData).map( (device, index) => {
         let tempDataObj = {}
-        if(condese === 'stddev'){
+        if(condense === 'stddev'){
             Object.keys(graphData[device]).forEach( (date) => {
                 let sumOfData = 0;
                 if(date.substring(0, date.indexOf(',')) in labelsObj){

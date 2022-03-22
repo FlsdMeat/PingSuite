@@ -48,9 +48,9 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
         } else if (rangeType === 'dateRange'){
             text = `Date Range: ${dateRange.replaceAll('_', ' ').replace('?', ' to ')};`
         }
-        if (organization === 'avg'){
+        if (condense === 'avg'){
             text += ` Condensed by: Average;`
-        } else if (organization === 'stddev'){
+        } else if (condense === 'stddev'){
             text += ` Condensed by: Standard Deviation;`
         }
         return text

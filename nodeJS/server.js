@@ -111,9 +111,7 @@ app.get('/api/pingResults/*', async (req, res) => {
             }
             let graphParams = {}
             if(urlGraph[0] === 'line'){
-                console.log(url)
                 graphParams = await LineGraph(cache[url], urlArr, urlGraph)
-                console.log(graphParams)
             } else if (urlGraph [0] === 'bar'){
                 graphParams = await LineGraph(cache[url], urlArr, urlGraph)
             } else {
@@ -127,7 +125,6 @@ app.get('/api/pingResults/*', async (req, res) => {
                 let graphParams = {}
                 if(urlGraph[0] === 'line'){
                     graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
-                    console.log('here')
                 } else if (urlGraph [0] === 'bar'){
                     graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
                 } else {
@@ -138,7 +135,6 @@ app.get('/api/pingResults/*', async (req, res) => {
                 return res.send(cache['allDates'])
             }
         }else if (urlArr[0] === 'selectDate'){
-            console.log(url)
             let data = {}
             urlArr[1] = urlArr[1].replaceAll("_", " ")
             Object.keys(cache['allDates']).forEach(deviceID=>{

@@ -84,12 +84,12 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){
     let db, res;
     db = await pool.getConnection();
     let deviceCheck = await checkDevice(db, mac, deviceName, ipAddr)
-    let building = ipLocal[ipAddr.split('.')[1]]
+    let building = ipLocal[parseInt(ipAddr.split('.')[2])]
     if(deviceCheck){
         try {
             res = await db.query(
                 `INSERT INTO PingResults (deviceID, datetime, building, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
-                VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', ${building}, ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${pingTest['stddev'].toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${speedTest['ping'].toFixed(2)})`
+                VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${pingTest['stddev'].toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${speedTest['ping'].toFixed(2)})`
             )
             delete res['meta']
             databaseLog(`${deviceName} latest ping was delievered to the database!`)

@@ -12,7 +12,7 @@ export default function App() {
   const [graphYAxis, updateYAxis] = useState(`pingAvg`);
   const [graphType, updateGraphType] = useState(`line`);
   const [dataCondense, updateDataCondense] = useState(`stddev`);
-  const [organization, updateOrganization] = useState(`building`);
+  const [organization, updateOrganization] = useState(`device`);
   const [rangeType,  updateRangeType] = useState(`allDates`);
   const [selectDate,  updateSelectDate] = useState('');
   const [dropDownObject, updateDropDown] = useState({'graphType':'Graph Selection', 'graphYAxis':'Statistic Selection','rangeType': 'Date Range Selection', 'dataCondense': 'Condensing Type', 'organization': 'Organize data by'})
@@ -102,7 +102,7 @@ export default function App() {
         break;
       case 'organization':
         updateOrganization(organizationTypes[0][item])
-        updateDropDown(dropDownObject => ({...dropDownObject, 'dataCondense':item}))
+        updateDropDown(dropDownObject => ({...dropDownObject, 'organization':item}))
         if(rangeType === "allDates"){
           updateGenGraph(true)
         }
@@ -128,10 +128,10 @@ export default function App() {
     <div className="main-content">
       <nav>
         <div>
-          <DropDown dropDownType={'graphType'} dropDownIntial={dropDownObject['graphType']} buttonSelection={Object.keys(graphTypes[0])} stateUpdate={dropDownUpdate}/>
+          <DropDown dropDownType={'graphType'} disabled={[false, true]} dropDownIntial={dropDownObject['graphType']} buttonSelection={Object.keys(graphTypes[0])} stateUpdate={dropDownUpdate}/>
           <DropDown dropDownType={'graphYAxis'} dropDownIntial={dropDownObject['graphYAxis']} buttonSelection={Object.keys(dataOptions[0])} stateUpdate={dropDownUpdate}/>
-          <DropDown dropDownType={'organization'} dropDownIntial={dropDownObject['organization']} buttonSelection={Object.keys(organizationTypes[0])} stateUpdate={dropDownUpdate}/>
-          <DropDown dropDownType={'rangeType'} dropDownIntial={dropDownObject['rangeType']} buttonSelection={Object.keys(rangeTypes[0])} stateUpdate={dropDownUpdate}/>
+          {/*<DropDown dropDownType={'organization'} dropDownIntial={dropDownObject['organization']} buttonSelection={Object.keys(organizationTypes[0])} stateUpdate={dropDownUpdate}/>*/}
+          <DropDown dropDownType={'rangeType'} disabled={[false, true, true]} dropDownIntial={dropDownObject['rangeType']} buttonSelection={Object.keys(rangeTypes[0])} stateUpdate={dropDownUpdate}/>
           {rangeType !== 'selectDate' && <DropDown dropDownType={'dataCondense'} dropDownIntial={dropDownObject['dataCondense']} buttonSelection={Object.keys(dataCondenseTypes[0])} stateUpdate={dropDownUpdate}/>}
           {rangeType === 'selectDate' && <DatePicker selected={selectDate} onChange={setSelectDate} />}
           {showGenerateGraph && <button onClick={()=>{getGraphOject()}}>Generate Graph</button>}

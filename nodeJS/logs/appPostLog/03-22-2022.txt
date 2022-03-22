@@ -1,0 +1,17 @@
+[10:51:54][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+Error: retrieve connection from pool timeout after 10000ms
+    at Object.module.exports.createError (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/misc/errors.js:61:10)
+    at timeoutTask (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/pool-base.js:319:16)
+    at Timeout.rejectAndResetTimeout [as _onTimeout] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/pool-base.js:342:5)
+    at listOnTimeout (node:internal/timers:559:11)
+    at processTimers (node:internal/timers:500:7)[10:53:18][appPostLog]: [AppGet pingResults]
+Stacktrace:
+                            ==========================
+Error: retrieve connection from pool timeout after 10001ms
+    at Object.module.exports.createError (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/misc/errors.js:61:10)
+    at timeoutTask (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/pool-base.js:319:16)
+    at Timeout.rejectAndResetTimeout [as _onTimeout] (/Users/flossedmeat/Documents/Python/PingTest/nodeJS/node_modules/mariadb/lib/pool-base.js:342:5)
+    at listOnTimeout (node:internal/timers:559:11)
+    at processTimers (node:internal/timers:500:7)
