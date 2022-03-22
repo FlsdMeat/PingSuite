@@ -13,8 +13,8 @@ if(process.env.NODE_ENV == 'production'){
 } else {
     pool = mariadb.createPool({
         host:process.env.DB_HOST,
-        user:process.env.DB_HomeUSER,
-        password:process.env.DB_HomePW,
+        user:process.env.DB_USER,
+        password:process.env.DB_PW,
         database:process.env.DB_DATABASE,
         connectionLimit:4
     })
@@ -77,14 +77,19 @@ async function checkDevice(db, mac, deviceName, ipAddr){
 }
 
 async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){
+    let ipLocal = {
+        1:'Harugari Hall',2:'South Campus Hall',3:'1124 Campbell Ave',4:'Kaplan Hall',5:'Dodds Hall', 6:'Bethel Hall',7:'Gate House', 8:'Campus Store / UNH PD', 9:'Bartels Hall', 10:'Buckman Hall / Utility Building',
+        11:'Peterson Library', 12:'Maxcy Hall', 13:'Bayer Hall', 14:'Bartels Student Activity Center', 15:'Dunham Hall', 16:'Sheffield Hall', 17:'Winchester Hall', 18:'Arbeiter Maenner Chor', 19:'North Campus - House', 20:'Echlin Hall'
+    }
     let db, res;
     db = await pool.getConnection();
     let deviceCheck = await checkDevice(db, mac, deviceName, ipAddr)
+    let building = ipLocal[ipAddr.split('.')[1]]
     if(deviceCheck){
         try {
             res = await db.query(
-                `INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
-                VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${pingTest['stddev'].toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${speedTest['ping'].toFixed(2)})`
+                `INSERT INTO PingResults (deviceID, datetime, building, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
+                VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', ${building}, ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${pingTest['stddev'].toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${speedTest['ping'].toFixed(2)})`
             )
             delete res['meta']
             databaseLog(`${deviceName} latest ping was delievered to the database!`)

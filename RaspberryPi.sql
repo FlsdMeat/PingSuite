@@ -12,6 +12,7 @@ CREATE TABLE `PingResults`(
     `pingID` INT PRIMARY KEY AUTO_INCREMENT,
     `deviceID` INT NOT NULL,
     `datetime` DATETIME NOT NULL,
+    `building` VARCHAR(255) NOT NULL,
     `pingMin` DECIMAL(7,6) NOT NULL,
     `pingAvg` DECIMAL(7,6) NOT NULL,
     `pingMax` DECIMAL(7,6) NOT NULL,
@@ -45,7 +46,8 @@ VALUES (1, '2022-03-03 18:44:1', 7.417, 46.287, 116.276, '0%', 35.8515, 25378084
 
 -- @BLOCK
 CREATE VIEW `PingResultsView` AS
-SELECT t1.DeviceName, t1.ipAddr, t1.MacAddress, t2.* FROM PingResults t2 JOIN Devices t1 ON t2.deviceID = t1.id;
+SELECT t1.DeviceName, t1.ipAddr, t1.MacAddress, t2.* 
+FROM PingResults t2 JOIN Devices t1 ON t2.deviceID = t1.id;
 
 -- @BLOCK
 DROP VIEW PingResultsView;
