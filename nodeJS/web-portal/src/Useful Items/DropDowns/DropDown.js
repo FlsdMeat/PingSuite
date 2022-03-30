@@ -8,7 +8,7 @@ export default function DropDown({dropDownType, disabled, dropDownIntial, button
     const getSelection = () => {
         let buttons = buttonSelection.map((item,index)=>{
             if(disabled !== undefined && disabled[index] === true){
-                return <button key={index} disabled="true" className="usefulItems_dropdown01_item" onClick={()=>{stateUpdate(dropDownType,item); updateDropDownDisplay("none")}}>{item}</button>
+                return <button key={index} disabled={true} className="usefulItems_dropdown01_item" onClick={()=>{stateUpdate(dropDownType,item); updateDropDownDisplay("none")}}>{item}</button>
             }
             return <button key={index} className="usefulItems_dropdown01_item" onClick={()=>{stateUpdate(dropDownType,item); updateDropDownDisplay("none")}}>{item}</button>
         })

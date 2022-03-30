@@ -12,7 +12,7 @@ export default function App() {
   const [graphYAxis, updateYAxis] = useState(`pingAvg`);
   const [graphType, updateGraphType] = useState(`line`);
   const [dataCondense, updateDataCondense] = useState(`stddev`);
-  const [organization, updateOrganization] = useState(`device`);
+  const [organization, updateOrganization] = useState(`building`);
   const [rangeType,  updateRangeType] = useState(`allDates`);
   const [selectDate,  updateSelectDate] = useState('');
   const [dropDownObject, updateDropDown] = useState({'graphType':'Graph Selection', 'graphYAxis':'Statistic Selection','rangeType': 'Date Range Selection', 'dataCondense': 'Condensing Type', 'organization': 'Organize data by'})
@@ -33,7 +33,6 @@ export default function App() {
     'PingTest Min':'pingMin',
     'PingTest Loss':'pingLoss',
     'PingTest Standard Deviation':'pingStdDev',
-    'PingTest Mean':'pingMean',
     'SpeedTest Ping':'sTping',
     'SpeedTest Download':'sTdown',
     'SpeedTest Upload':'sTup',
@@ -43,7 +42,6 @@ export default function App() {
     'pingMin':'PingTest Min',
     'pingLoss':'PingTest Loss',
     'pingStdDev':'PingTest Standard Deviation',
-    'pingMean':'PingTest Mean',
     'sTping':'SpeedTest Ping',
     'sTdown':'SpeedTest Download',
     'sTup':'SpeedTest Upload',
@@ -57,10 +55,12 @@ export default function App() {
   }]
   const dataCondenseTypes = [{
     'Average':'avg',
-    'Standard Deviation':'stddev'
+    'Standard Deviation':'stddev',
+    'Trimmed Average':'trimAvg'
   }, {
     'avg':'Average',
-    'stddev':'Standard Deviation'
+    'stddev':'Standard Deviation',
+    'trimAvg':'Trimmed Average'
   }]
   const organizationTypes = [{
     'Building':'building',
@@ -130,8 +130,8 @@ export default function App() {
         <div>
           <DropDown dropDownType={'graphType'} disabled={[false, true]} dropDownIntial={dropDownObject['graphType']} buttonSelection={Object.keys(graphTypes[0])} stateUpdate={dropDownUpdate}/>
           <DropDown dropDownType={'graphYAxis'} dropDownIntial={dropDownObject['graphYAxis']} buttonSelection={Object.keys(dataOptions[0])} stateUpdate={dropDownUpdate}/>
-          {/*<DropDown dropDownType={'organization'} dropDownIntial={dropDownObject['organization']} buttonSelection={Object.keys(organizationTypes[0])} stateUpdate={dropDownUpdate}/>*/}
-          <DropDown dropDownType={'rangeType'} disabled={[false, true, true]} dropDownIntial={dropDownObject['rangeType']} buttonSelection={Object.keys(rangeTypes[0])} stateUpdate={dropDownUpdate}/>
+          <DropDown dropDownType={'organization'} dropDownIntial={dropDownObject['organization']} buttonSelection={Object.keys(organizationTypes[0])} stateUpdate={dropDownUpdate}/>
+          <DropDown dropDownType={'rangeType'} disabled={[false, false, true]} dropDownIntial={dropDownObject['rangeType']} buttonSelection={Object.keys(rangeTypes[0])} stateUpdate={dropDownUpdate}/>
           {rangeType !== 'selectDate' && <DropDown dropDownType={'dataCondense'} dropDownIntial={dropDownObject['dataCondense']} buttonSelection={Object.keys(dataCondenseTypes[0])} stateUpdate={dropDownUpdate}/>}
           {rangeType === 'selectDate' && <DatePicker selected={selectDate} onChange={setSelectDate} />}
           {showGenerateGraph && <button onClick={()=>{getGraphOject()}}>Generate Graph</button>}
