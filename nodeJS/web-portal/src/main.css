@@ -23,6 +23,6 @@ nav > div{
     position: absolute;
 }
 .usefulItems-datePicker-container input{
-    width:80px;
+    width:80px !important;
     text-align: center;
 }
