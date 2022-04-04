@@ -7,7 +7,22 @@ Chart.register(...registerables);
 export default function CreateGraph({organization, condense,graphYAxis, graphType, rangeType, dateRange}){
     const [graphPoints, updateGraphPoints] = useState({})
     const [ready, GraphReady] = useState(false)
-
+    let dates = ''
+    if(rangeType === 'selectDate'){
+        let temp = dateRange.toString().split(' ')
+        dates = `${temp[1]}?${temp[2]},?${temp[3]}`
+        console.log(dates)
+    }
+    if(rangeType === 'dateRange'){
+        try {
+            let temp = dateRange.toString().split('+')
+            let date1 = temp[0].split(' ')
+            let date2 = temp[1].split(' ')
+            dates = `${date1[1]}?${date1[2]},?${date1[3]}+${date2[1]}?${date2[2]},?${date2[3]}`
+        } catch (error) {
+            
+        }
+    }
     useEffect(()=>{
         getGraphData()
     }, [organization, condense,graphYAxis, graphType, rangeType, dateRange])
@@ -23,12 +38,6 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
                     }
             })
         } else {
-            let dates = ''
-            if(rangeType === 'selectDate'){
-                let temp = dateRange.toString().split(' ')
-                dates = `${temp[1]}?${temp[2]},?${temp[3]}`
-                console.log(dates)
-            }
             await axios.get(`http://localhost:8080/api/pingResults/${rangeType}/${graphType}_${graphYAxis}_${organization}_${dates}`)
                 .then(async res=>{
                     if(res.data !== false){
@@ -41,20 +50,29 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
     }
 
     const getXAxisText = () =>{
-        let text = ""
-        if(rangeType === 'allDates'){
-            text = `Date Range: All Dates;`
-        } else if (rangeType === 'singleDate'){
-            text = `Date Range: Single Day [ ${dateRange.replaceAll('_', ' ')} ];`
-        } else if (rangeType === 'dateRange'){
-            text = `Date Range: ${dateRange.replaceAll('_', ' ').replace('?', ' to ')};`
+        try {
+            let text = ""
+            if(rangeType === 'allDates'){
+                text = `Date Range: All Dates;`
+            } else if (rangeType === 'singleDate'){
+                text = `Date Range: Single Day [ ${dateRange.replaceAll('_', ' ')} ];`
+            } else if (rangeType === 'dateRange'){
+                let date1 = graphPoints.labels[Object.keys(graphPoints.labels)[0]]
+                let date2 = graphPoints.labels[Object.keys(graphPoints.labels)[Object.keys(graphPoints.labels).length - 1]]
+                text = `Date Range: ${date1} to ${date2};`
+            }
+            if(rangeType === 'allDates'){
+
+                if (condense === 'avg'){
+                    text += ` Condensed by: Average;`
+                } else if (condense === 'stddev'){
+                    text += ` Condensed by: Standard Deviation;`
+                }
+            }
+            return text
+        } catch (error) {
+            return "error"
         }
-        if (condense === 'avg'){
-            text += ` Condensed by: Average;`
-        } else if (condense === 'stddev'){
-            text += ` Condensed by: Standard Deviation;`
-        }
-        return text
     }
 
     const titles = {
@@ -77,6 +95,23 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
 
     const legendHoverEvent = (e, legendItem, legend) =>{
         console.log('HHOVVVERING and', legendItem)
+    }
+
+    const getTitle = () =>{
+        try {
+            if(rangeType === 'allDates'){
+                return `${titles[graphYAxis]} over All Dates`
+            } else if (rangeType === 'singleDate'){
+                return `${titles[graphYAxis]} on ${dateRange.replaceAll('_', ' ')}`
+            } else if (rangeType === 'dateRange'){
+                let date1 = graphPoints.labels[Object.keys(graphPoints.labels)[0]]
+                let date2 = graphPoints.labels[Object.keys(graphPoints.labels)[Object.keys(graphPoints.labels).length - 1]]
+                return `${titles[graphYAxis]} from  ${date1} to ${date2};`
+            }
+        } catch (error) {
+            console.log(error)
+            return "error"
+        }
     }
 
     return(
@@ -125,7 +160,7 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
                 title: {
                     display: true,
                     color:'white',
-                    text: `${titles[graphYAxis]} over ${dateRangeTitles[rangeType]}`
+                    text:getTitle
                 },
             
             }

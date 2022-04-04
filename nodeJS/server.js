@@ -142,65 +142,18 @@ app.get('/api/pingResults/*', async (req, res) => {
                 return res.send(cache[url])
             }
         }else if (urlArr[0] === 'dateRange'){
-            let from = (urlArr[1].substring(0, urlArr[1].indexOf('?'))).replace(',','').split('_')
-            let to = urlArr[1].substring(urlArr[1].indexOf('?') + 1).replace(',','').split('_')
-            let months = {
-                'Jan':1, 'Feb':2, 'Mar':3, 'Apr':4, 'May':5, 'Jun':6,'Jul':7, 'Aug':8, 'Sep':9, 'Oct':10, 'Nov':11,'Dec':12
-            }
-            let data = {}
-            Object.keys(cache['allDates']).forEach(deviceID=>{
-                let currentDevice = cache['allDates'][deviceID]
-                Object.keys(currentDevice).forEach(date => {
-                    if (date === "DeviceName" || date === "CurrentStatus"){
-                        return true
-                    }
-                    let dateArr = date.replace(',', '').split(' ')
-                    if (parseInt(from[2]) <= parseInt(dateArr[2]) && parseInt(dateArr[2]) <= parseInt(to[2])){
-                        if((   months[to[0]] < months[from[0]] && 
-                                (   months[from[0]] < months[dateArr[0]] || months[to[0]] > months[dateArr[0]])   )
-                            || months[from[0]] < months[dateArr[0]] && months[dateArr[0]] < months[to[0]]){
-                                if(data[deviceID] === undefined){
-                                    data[deviceID] = {}
-                                }
-                                data[deviceID][date] = currentDevice[date]
-                        } else if (months[dateArr[0]] === months[to[0]]){
-                            if(parseInt(dateArr[1]) <= parseInt(to[1])){
-                                if(data[deviceID] === undefined){
-                                    data[deviceID] = {}
-                                }
-                                data[deviceID][date] = currentDevice[date]
-                            }
-                        } else if (months[dateArr[0]] === months[from[0]]){
-                            if(parseInt(dateArr[1]) >= parseInt(from[1])){
-                                if(data[deviceID] === undefined){
-                                    data[deviceID] = {}
-                                }
-                                data[deviceID][date] = currentDevice[date]
-                            }
-                        } else {
-                            return true
-                        }
-                    }
-                    return true
-                })
-                if(data[deviceID] !== undefined){
-                    data[deviceID]["DeviceName"] = currentDevice["DeviceName"]
-                    data[deviceID]["CurrentStatus"] = currentDevice["CurrentStatus"]
-                }
-            })
-            cache[url] = data
-            try {
-                urlGraph = urlArr[2].split('_')
+            try{
+                urlGraph = urlArr[1].split('_')
                 let graphParams = {}
                 if(urlGraph[0] === 'line'){
-                    graphParams = await LineGraph(cache[url], urlArr, urlGraph)
+                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
                 } else if (urlGraph [0] === 'bar'){
-                    graphParams = await LineGraph(cache[url], urlArr, urlGraph)
+                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
                 } else {
                     return res.send(cache[url])
                 }
                 return res.send(graphParams)
-            } catch (error) {
+            } catch(error) {
                 return res.send(cache[url])
             }
         }

@@ -22,3 +22,7 @@ nav > div{
     flex-direction: row;
     position: absolute;
 }
+.usefulItems-datePicker-container input{
+    width:80px;
+    text-align: center;
+}

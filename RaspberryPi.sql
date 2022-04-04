@@ -1,4 +1,3 @@
-
 -- @block
 CREATE TABLE `Devices`(
     `id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -15,7 +14,7 @@ CREATE TABLE `PingResults`(
     `building` VARCHAR(255) NOT NULL,
     `pingMin` DECIMAL(7,6) NOT NULL,
     `pingAvg` DECIMAL(7,6) NOT NULL,
-    `pingMax` DECIMAL(7,6) NOT NULL,
+    `pingMax` DECIMAL(10,6) NOT NULL,
     `pingStdDev` DECIMAL(10,5) NOT NULL,
     `sTdown` DECIMAL(9,7) NOT NULL,
     `sTup`  DECIMAL(9,7) NOT NULL,
@@ -33,6 +32,16 @@ CREATE TABLE `DeviceLogs`(
     FOREIGN KEY(`deviceID`) REFERENCES `Devices`(`id`),
     FOREIGN KEY(`latestPing`) REFERENCES `PingResults`(`pingID`)
 );
+-- @block
+CREATE TABLE `sshLogin`(
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `deviceID` INT NOT NULL,
+    `username` VARCHAR(15) NOT NULL,
+    `password` VARCHAR(48) NOT NULL,
+    FOREIGN KEY(`deviceID`) REFERENCES `Devices`(`id`)
+);
+-- @BLOCK
+SELECT * FROM sshLogin;
 -- @BLOCK
 ALTER TABLE PingResults MODIFY COLUMN `sTping` DECIMAL(4,3) NOT NULL;
 -- @block
