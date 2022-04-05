@@ -94,6 +94,10 @@ export default function App() {
       case 'rangeType':
         updateRangeType(rangeTypes[0][item])
         updateDropDown(dropDownObject => ({...dropDownObject, 'rangeType':item}))
+        allowDate2(false)
+        if(rangeTypes[0][item] !== 'allDates'){
+          updateGenGraph(false)
+        }
         break;
       case 'dataCondense':
         updateDataCondense(dataCondenseTypes[0][item])
@@ -129,26 +133,32 @@ export default function App() {
     <div className="main-content">
       <nav>
         <div>
-          <DropDown dropDownType={'graphType'} disabled={[false, true]} dropDownIntial={dropDownObject['graphType']} buttonSelection={Object.keys(graphTypes[0])} stateUpdate={dropDownUpdate}/>
+          <DropDown dropDownType={'graphType'} dropDownIntial={dropDownObject['graphType']} buttonSelection={Object.keys(graphTypes[0])} stateUpdate={dropDownUpdate}/>
           <DropDown dropDownType={'graphYAxis'} dropDownIntial={dropDownObject['graphYAxis']} buttonSelection={Object.keys(dataOptions[0])} stateUpdate={dropDownUpdate}/>
           <DropDown dropDownType={'organization'} dropDownIntial={dropDownObject['organization']} buttonSelection={Object.keys(organizationTypes[0])} stateUpdate={dropDownUpdate}/>
           <DropDown dropDownType={'rangeType'} dropDownIntial={dropDownObject['rangeType']} buttonSelection={Object.keys(rangeTypes[0])} stateUpdate={dropDownUpdate}/>
           {rangeType === 'allDates' && <DropDown dropDownType={'dataCondense'} dropDownIntial={dropDownObject['dataCondense']} buttonSelection={Object.keys(dataCondenseTypes[0])} stateUpdate={dropDownUpdate}/>}
           {rangeType === 'selectDate' && <div className='usefulItems-datePicker-container'><DatePicker selected={selectDate} onChange={date=>{
             updateSelectDate(date)
-            allowDate2(true)
+            updateGenGraph(true)
           }} /></div>} 
           {rangeType === 'dateRange' && <div className='usefulItems-datePicker-container'><DatePicker selected={selectDate} onChange={date=>{
             updateSelectDate(date)
             if(date2 === false){
               allowDate2(true)
-            } else {
+            } else if (selectDate2 !== '' && selectDate2.getTime() < date.getTime()){
+              alert('Please select a date that is after the first date')
+            }else{
               updateGenGraph(true)
             }
           }} /> </div>}
           {date2 && <div className='usefulItems-datePicker-container'><DatePicker selected={selectDate2} onChange={date=>{
             updateSelectDate2(date)
-            updateGenGraph(true)
+            if(date.getTime() < selectDate.getTime()){
+              alert('Please select a date that is after the first date')
+            }else{
+              updateGenGraph(true)
+            }
           }} /> </div>}
           {showGenerateGraph && <button onClick={()=>{getGraphOject()}}>Generate Graph</button>}
         </div>

@@ -12,6 +12,7 @@ async function LineGraph(graphData, url, graphParams){
     if(url[0] === 'allDates'){
         data = await findGraphPointsAllDates(graphData, url,graphParams)
     } else if (url[0] === 'selectDate'){
+        console.log(url, graphParams)
         data = await findGraphPointsSelectDate(graphData, url,graphParams)
     } else if (url[0] === 'dateRange'){
         data = await findGraphPointsDateRange(graphData, url, graphParams)
@@ -57,16 +58,16 @@ async function findGraphPointsAllDates(graphData, url,graphParams){
 
 async function findGraphPointsSelectDate(graphData, url,graphParams){
     const getGraphData = () => {
-        let rangeType, graphYAxis, organization;
+        let rangeType, graphYAxis, organization, datasets;
         rangeType = url[0]
         graphYAxis = graphParams[1]
         organization = graphParams[2]
         selectDate = graphParams[3].replaceAll('?', ' ')
-        let labels = [...Array(24)].map((a,b)=>b), datasets = [];
+        let labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ,16 ,17, 18, 19, 20, 21, 22, 23];
         if(organization === 'device'){
-            datasets = datasetsSelectDateDevices(graphData, graphYAxis, labels, date1, date2)
+            datasets = datasetsSelectDateDevices(graphData, graphYAxis, labels, selectDate)
         } else if (organization === 'building'){
-            datasets = datasetsSelectDateBuildings(graphData, graphYAxis, labels, date1, date2)
+            datasets = datasetsSelectDateBuildings(graphData, graphYAxis, labels, selectDate)
         }
         return{
             labels:labels,
@@ -138,25 +139,6 @@ function getRangeArray(dateRange){
     })
     return [dateTimeObj, dateArr]
 }
-function withinDateRange(date, dateRange){
-    date = date.replace(',', '').split(' ')
-    let date1 = dateRange[0].replace(',', '').split(' ')
-    let date2 = dateRange[1].replace(',', '').split(' ')
-    let MONTHS = {Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06', Jul: '07', Aug: '08', Sep: '09', Oct:'10', Nov: '11', Dec: '12'}
-    if(date1[1].length == 1){
-        date1[1] = '0' + date1[1]
-    }
-    if(date2[1].length == 1){
-        date2[1] = '0' + date2[1]
-    }
-    date = new Date(`${MONTHS[date[0]]}/${date[1]}/${date[2]}`)
-    date1 = new Date(`${MONTHS[date1[0]]}/${date1[1]}/${date1[2]}`)
-    date2 = new Date(`${MONTHS[date2[0]]}/${date2[1]}/${date2[2]}`)
-    if(date1.getTime < date.getTime && date.getTime < date2.getTime){
-        return true
-    }
-    return false
-}
 async function findGraphPointsDateRange(graphData, url, graphParams){
     const getGraphData = () => {
         try {
@@ -165,6 +147,7 @@ async function findGraphPointsDateRange(graphData, url, graphParams){
             graphYAxis = graphParams[1]
             organization = graphParams[2]
             dateRange = graphParams[3].replaceAll('?', ' ').split('+')
+            console.log(dateRange)
             dateRange = grabDateArr(dateRange)
             let labels = getRangeArray(dateRange)
             let labelsObj = labels[0]
@@ -623,6 +606,7 @@ function datasetsDateRangeBuildings(graphData,graphYAxis, labels, labelsObj, dat
     }catch (err){
         console.log(err)
     }
+    console.log(buildingsFinalData)
     return Object.keys(buildingsFinalData).map((building, index)=>{
         if(building === 'color'){
             return false

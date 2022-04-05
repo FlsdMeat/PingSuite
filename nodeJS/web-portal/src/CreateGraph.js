@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import {Line} from 'react-chartjs-2';
+import {Line, Bar} from 'react-chartjs-2';
 import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
@@ -8,6 +8,10 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
     const [graphPoints, updateGraphPoints] = useState({})
     const [ready, GraphReady] = useState(false)
     let dates = ''
+    let realGraphType = graphType
+    if(graphType === 'bar'){
+        graphType = 'line'
+    }
     if(rangeType === 'selectDate'){
         let temp = dateRange.toString().split(' ')
         dates = `${temp[1]}?${temp[2]},?${temp[3]}`
@@ -54,15 +58,14 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
             let text = ""
             if(rangeType === 'allDates'){
                 text = `Date Range: All Dates;`
-            } else if (rangeType === 'singleDate'){
-                text = `Date Range: Single Day [ ${dateRange.replaceAll('_', ' ')} ];`
+            } else if (rangeType === 'selectDate'){
+                text = `Date Range: Single Day [ ${dates.replaceAll('?', ' ')} ]; Represented by Hour`
             } else if (rangeType === 'dateRange'){
                 let date1 = graphPoints.labels[Object.keys(graphPoints.labels)[0]]
                 let date2 = graphPoints.labels[Object.keys(graphPoints.labels)[Object.keys(graphPoints.labels).length - 1]]
                 text = `Date Range: ${date1} to ${date2};`
             }
             if(rangeType === 'allDates'){
-
                 if (condense === 'avg'){
                     text += ` Condensed by: Average;`
                 } else if (condense === 'stddev'){
@@ -71,6 +74,7 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
             }
             return text
         } catch (error) {
+            console.log(error)
             return "error"
         }
     }
@@ -101,8 +105,8 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
         try {
             if(rangeType === 'allDates'){
                 return `${titles[graphYAxis]} over All Dates`
-            } else if (rangeType === 'singleDate'){
-                return `${titles[graphYAxis]} on ${dateRange.replaceAll('_', ' ')}`
+            } else if (rangeType === 'selectDate'){
+                return `${titles[graphYAxis]} on ${dates.replaceAll('?', ' ')}`
             } else if (rangeType === 'dateRange'){
                 let date1 = graphPoints.labels[Object.keys(graphPoints.labels)[0]]
                 let date2 = graphPoints.labels[Object.keys(graphPoints.labels)[Object.keys(graphPoints.labels).length - 1]]
@@ -113,11 +117,7 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
             return "error"
         }
     }
-
-    return(
-    <div className='GraphData'>
-        {ready && 
-        <Line
+    const barGraph = (<Bar
         datasetIdKey='id'
         data={{
             labels:graphPoints.labels,
@@ -165,9 +165,67 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
             
             }
         }}
-        />
+        />)
+    const LineGraph = (
+        <Line
+            datasetIdKey='id'
+            data={{
+                labels:graphPoints.labels,
+                datasets:graphPoints.datasets
+            }}
+            options={{
+                fill:true,  
+                scales: {
+                    yAxes:{
+                        grid:{
+                            color: 'hsl(215, 8%, 43%)'
+                        },
+                        ticks: {
+                            color: "white"
+                        }
+                    },
+                    xAxes:{
+                        title:{
+                            display:true,
+                            text:getXAxisText,
+                            color:'white'
+                        },
+                        grid:{
+                            color: 'hsl(215, 8%, 43%)'
+                        },
+                        ticks: {
+                            color: "white"
+                        }
+                    }
+                },          
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            // This more specific font property overrides the global property
+                            color:'white'
+                        },
+                        onHover: legendHoverEvent
+                    },
+                    title: {
+                        display: true,
+                        color:'white',
+                        text:getTitle
+                    },
+                
+                }
+            }}
+            />
+    )
+    const getGraph = () => {
+        if(realGraphType === 'bar'){
+            return barGraph
         }
-        
-    </div>
+        return LineGraph
+    }
+    return(
+        <div className='GraphData'>
+            {ready && getGraph()}
+        </div>
     )
 }
