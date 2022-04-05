@@ -120,24 +120,28 @@ function grabDateArr(dateRange){
     }
 }
 function getRangeArray(dateRange){
-    let dateTimeObj = {}
-    let dateArr = []
-    let stagger = 1
-    if(dateRange.length < 7){
-        stagger = dateRange.length
-    } else {
-        stagger = 12
+    try {
+        let dateTimeObj = {}
+        let dateArr = []
+        let stagger = 1
+        if(dateRange.length < 7){
+            stagger = dateRange.length
+        } else {
+            stagger = 12
+        }
+        dateRange.forEach(date => {
+            if(dateTimeObj[date] == undefined){
+                dateTimeObj[date] = []
+            }
+            for(let i = 0; i < 24; i += stagger){
+                dateArr.push(`${date} ${i}:00`)
+                dateTimeObj[date].push(`${i}:00`)
+            }
+        })
+        return [dateTimeObj, dateArr]
+    } catch (error) {
+        console.log('error in getRangeArary', error)
     }
-    dateRange.forEach(date => {
-        if(dateTimeObj[date] == undefined){
-            dateTimeObj[date] = []
-        }
-        for(let i = 0; i < 24; i += stagger){
-            dateArr.push(`${date} ${i}:00`)
-            dateTimeObj[date].push(`${i}:00`)
-        }
-    })
-    return [dateTimeObj, dateArr]
 }
 async function findGraphPointsDateRange(graphData, url, graphParams){
     const getGraphData = () => {
