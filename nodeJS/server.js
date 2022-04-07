@@ -1,9 +1,13 @@
+//Express is used for the api aspect of NodeJS
 const express = require('express');
 const app = express()
 const server = require('http').createServer(app);
-const {uploadSpeedTest, getPingResults,getCurrentDeviceDetails} = require('./database.js')
-const {appPostLog} = require('./logging.js')
-const {LineGraph} = require('./GraphAPI/LineGraph.js')
+//Database Functions
+const { uploadSpeedTest, getPingResults,getCurrentDeviceDetails } = require('./database.js')
+//Logging for the app posting
+const { appPostLog } = require('./logging.js')
+//Api for creating the graphs
+const { GraphAPI } = require('./GraphAPI/GraphAPI.js')
 require('dotenv').config()
 
 app.use(express.json())
@@ -102,10 +106,9 @@ app.get('/api/pingResults/*', async (req, res) => {
                 return res.send(cache[url])
             }
             let graphParams = {}
-            if(urlGraph[0] === 'line'){
-                graphParams = await LineGraph(cache[url], urlArr, urlGraph)
-            } else if (urlGraph [0] === 'bar'){
-                graphParams = await LineGraph(cache[url], urlArr, urlGraph)
+            if(urlGraph[0] === 'line' || urlGraph[0] === 'bar'){
+                urlGraph[0] = 'line'
+                graphParams = await GraphAPI(cache[url], urlArr, urlGraph)
             } else {
                 return res.send(cache[url])
             }
@@ -115,10 +118,9 @@ app.get('/api/pingResults/*', async (req, res) => {
             try{
                 urlGraph = urlArr[1].split('_')
                 let graphParams = {}
-                if(urlGraph[0] === 'line'){
-                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
-                } else if (urlGraph [0] === 'bar'){
-                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
+                if(urlGraph[0] === 'line' || urlGraph[0] === 'bar'){
+                    urlGraph[0] = 'line'
+                    graphParams = await GraphAPI(cache['allDates'], urlArr, urlGraph)
                 } else {
                     return res.send(cache['allDates'])
                 }
@@ -130,10 +132,9 @@ app.get('/api/pingResults/*', async (req, res) => {
             try{
                 urlGraph = urlArr[1].split('_')
                 let graphParams = {}
-                if(urlGraph[0] === 'line'){
-                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
-                } else if (urlGraph [0] === 'bar'){
-                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
+                if(urlGraph[0] === 'line' || urlGraph[0] === 'bar'){
+                    urlGraph[0] = 'line'
+                    graphParams = await GraphAPI(cache['allDates'], urlArr, urlGraph)
                 } else {
                     return res.send(cache[url])
                 }
@@ -145,10 +146,9 @@ app.get('/api/pingResults/*', async (req, res) => {
             try{
                 urlGraph = urlArr[1].split('_')
                 let graphParams = {}
-                if(urlGraph[0] === 'line'){
-                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
-                } else if (urlGraph [0] === 'bar'){
-                    graphParams = await LineGraph(cache['allDates'], urlArr, urlGraph)
+                if(urlGraph[0] === 'line' || urlGraph[0] === 'bar'){
+                    urlGraph[0] = 'line'
+                    graphParams = await GraphAPI(cache['allDates'], urlArr, urlGraph)
                 } else {
                     return res.send(cache[url])
                 }

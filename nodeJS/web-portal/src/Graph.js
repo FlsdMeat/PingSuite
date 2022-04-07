@@ -20,8 +20,11 @@ export default function App() {
   const [dropDownObject, updateDropDown] = useState({'graphType':'Graph Selection', 'graphYAxis':'Statistic Selection','rangeType': 'Date Range Selection', 'dataCondense': 'Condensing Type', 'organization': 'Organize data by'})
 
   useEffect(()=>{
-    updateGraphObject(<CreateGraph key={1} organization={organization} condense={dataCondense} graphYAxis={graphYAxis} graphType={graphType} rangeType={rangeType} dateRange={selectDate}/>)
-  }, [clickToUpdate])
+    if(clickToUpdate === 0){
+      updateGraphObject(<CreateGraph key={1} organization={organization} condense={dataCondense} graphYAxis={graphYAxis} graphType={graphType} rangeType={rangeType} dateRange={selectDate} updateGraph={clickToUpdate}/>)
+      updateClick(1)
+    }
+  }, [graphObject])
 
   useEffect(()=>{
     if(clickToUpdate > 0){

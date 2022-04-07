@@ -5,12 +5,14 @@
     align-items: center;
 }
 .GraphData{
-    width:95%;
+    width:92%;
 }
 body{
     background-color: hsl(217, 16%, 28%);
 }
 nav{
+    padding-top: 5px;
+    padding-left: 5px;
     display: flex;
     flex-direction: row;
     width:100%;

@@ -4,18 +4,12 @@ import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
-export default function CreateGraph({organization, condense,graphYAxis, graphType, rangeType, dateRange}){
-    const [graphPoints, updateGraphPoints] = useState({})
-    const [ready, GraphReady] = useState(false)
+export default function CreateGraph({organization, condense,graphYAxis, graphType, rangeType, dateRange, updateGraph}){
+    const [graphPoints, updateGraphPoints] = useState(null)
     let dates = ''
-    let realGraphType = graphType
-    if(graphType === 'bar'){
-        graphType = 'line'
-    }
     if(rangeType === 'selectDate'){
         let temp = dateRange.toString().split(' ')
         dates = `${temp[1]}?${temp[2]},?${temp[3]}`
-        console.log(dates)
     }
     if(rangeType === 'dateRange'){
         try {
@@ -29,7 +23,7 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
     }
     useEffect(()=>{
         getGraphData()
-    }, [organization, condense,graphYAxis, graphType, rangeType, dateRange])
+    }, [updateGraph])
 
     const getGraphData = async () => {
         if(rangeType === 'allDates'){
@@ -37,17 +31,14 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
                 .then(async res=>{
                     if(res.data !== false){
                         updateGraphPoints(res.data)
-                        console.log(res.data)
-                        GraphReady(true)
                     }
             })
         } else {
+            console.log('Dog')
             await axios.get(`http://localhost:8080/api/pingResults/${rangeType}/${graphType}_${graphYAxis}_${organization}_${dates}`)
-                .then(async res=>{
+                .then(res=>{
                     if(res.data !== false){
                         updateGraphPoints(res.data)
-                        console.log(res.data)
-                        GraphReady(true)
                     }
             })
         }
@@ -117,115 +108,116 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
             return "error"
         }
     }
-    const barGraph = (<Bar
-        datasetIdKey='id'
-        data={{
-            labels:graphPoints.labels,
-            datasets:graphPoints.datasets
-        }}
-        options={{
-            fill:true,  
-            scales: {
-                yAxes:{
-                    grid:{
-                        color: 'hsl(215, 8%, 43%)'
-                    },
-                    ticks: {
-                        color: "white"
-                    }
-                },
-                xAxes:{
-                    title:{
-                        display:true,
-                        text:getXAxisText,
-                        color:'white'
-                    },
-                    grid:{
-                        color: 'hsl(215, 8%, 43%)'
-                    },
-                    ticks: {
-                        color: "white"
-                    }
-                }
-            },          
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        // This more specific font property overrides the global property
-                        color:'white'
-                    },
-                    onHover: legendHoverEvent
-                },
-                title: {
-                    display: true,
-                    color:'white',
-                    text:getTitle
-                },
-            
-            }
-        }}
-        />)
-    const LineGraph = (
-        <Line
-            datasetIdKey='id'
-            data={{
-                labels:graphPoints.labels,
-                datasets:graphPoints.datasets
-            }}
-            options={{
-                fill:true,  
-                scales: {
-                    yAxes:{
-                        grid:{
-                            color: 'hsl(215, 8%, 43%)'
-                        },
-                        ticks: {
-                            color: "white"
-                        }
-                    },
-                    xAxes:{
-                        title:{
-                            display:true,
-                            text:getXAxisText,
-                            color:'white'
-                        },
-                        grid:{
-                            color: 'hsl(215, 8%, 43%)'
-                        },
-                        ticks: {
-                            color: "white"
-                        }
-                    }
-                },          
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            // This more specific font property overrides the global property
-                            color:'white'
-                        },
-                        onHover: legendHoverEvent
-                    },
-                    title: {
-                        display: true,
-                        color:'white',
-                        text:getTitle
-                    },
-                
-                }
-            }}
-            />
-    )
     const getGraph = () => {
-        if(realGraphType === 'bar'){
-            return barGraph
+        if(graphPoints !== null){
+            if(graphType === 'bar'){
+                return (<Bar
+                    datasetIdKey='id'
+                    data={{
+                        labels:graphPoints.labels,
+                        datasets:graphPoints.datasets
+                    }}
+                    options={{
+                        fill:true,  
+                        scales: {
+                            yAxes:{
+                                grid:{
+                                    color: 'hsl(215, 8%, 43%)'
+                                },
+                                ticks: {
+                                    color: "white"
+                                }
+                            },
+                            xAxes:{
+                                title:{
+                                    display:true,
+                                    text:getXAxisText,
+                                    color:'white'
+                                },
+                                grid:{
+                                    color: 'hsl(215, 8%, 43%)'
+                                },
+                                ticks: {
+                                    color: "white"
+                                }
+                            }
+                        },          
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    // This more specific font property overrides the global property
+                                    color:'white'
+                                },
+                                onHover: legendHoverEvent
+                            },
+                            title: {
+                                display: true,
+                                color:'white',
+                                text:getTitle
+                            },
+                        
+                        }
+                    }}
+                    />)
+            }
+            return (
+                <Line
+                    datasetIdKey='id'
+                    data={{
+                        labels:graphPoints.labels,
+                        datasets:graphPoints.datasets
+                    }}
+                    options={{
+                        fill:true,  
+                        scales: {
+                            yAxes:{
+                                grid:{
+                                    color: 'hsl(215, 8%, 43%)'
+                                },
+                                ticks: {
+                                    color: "white"
+                                }
+                            },
+                            xAxes:{
+                                title:{
+                                    display:true,
+                                    text:getXAxisText,
+                                    color:'white'
+                                },
+                                grid:{
+                                    color: 'hsl(215, 8%, 43%)'
+                                },
+                                ticks: {
+                                    color: "white"
+                                }
+                            }
+                        },          
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    // This more specific font property overrides the global property
+                                    color:'white'
+                                },
+                                onHover: legendHoverEvent
+                            },
+                            title: {
+                                display: true,
+                                color:'white',
+                                text:getTitle
+                            },
+                        
+                        }
+                    }}
+                    />
+            )
         }
-        return LineGraph
+        return <div></div>
     }
     return(
         <div className='GraphData'>
-            {ready && getGraph()}
+            {getGraph()}
         </div>
     )
 }

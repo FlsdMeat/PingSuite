@@ -103,10 +103,10 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){ //
             db.end()
             return true
         } catch (error) {
+            db.end()
             databaseLog(`Error with uploadSpeedTest`,error)
             saveResults(`INSERT INTO PingResults (deviceID, datetime, building, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
             VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${(pingTest['stddev']).toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${(speedTest['ping']).toFixed(2)})`)
-            db.end()
             return false
         }
     }
