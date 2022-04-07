@@ -1,7 +1,9 @@
+// File system api
 const fs = require('fs')
+// Current directory
 const { cwd } = require('process')
 
-function date(dateType){
+function date(dateType){ // Used to get specific dates or time for file creation
     let date_time = new Date();
     let date = ("0" + date_time.getDate()).slice(-2);
     let month = ("0" + (date_time.getMonth() + 1)).slice(-2);
@@ -18,10 +20,10 @@ function date(dateType){
     }
 }
 
-function generalLogs(who, status, error){
+function generalLogs(who, status, error){ // Takes in the specs from other functions, creates the proper logging format
     let log = '';
     try {
-        if (typeof error === 'object') {
+        if (typeof error === 'object') { //Takes the error and checks if its an object first
             if (error.message) {
                 log = (`[${date('time')}][${who}]: ${status}\n` + error.message)
             }
@@ -32,7 +34,7 @@ function generalLogs(who, status, error){
         } else {
             log = (`[${date('time')}][${who}]: ${status}\n${error}`);
         }
-        writeLog(log, who)
+        writeLog(log, who) // Sends format to writeLog, will print to txt File
     } catch (err) {
         reportLogError(err, 'generalLogs')
     }
@@ -60,11 +62,34 @@ function reportLogError(err, who){
 
 function writeLog(log, local){
     let path = cwd();
+    //Makes logging directory if doesn't exist
     path = `${path}/logs/${local}`
     if (fs.existsSync(path) == false){
         fs.mkdirSync(path);
     }
     console.log(log)
+    //Checks if file exists first, then appends the log to the file
+    if (!fs.existsSync(`${path}/${date('date')}.txt`)){
+        fs.writeFile(`${path}/${date('date')}.txt`, log, {flags: 'w'}, err => {
+            if(err){
+                reportLogError(err, 'writeLogs')
+            }
+        })
+    } else {
+        fs.appendFile(`${path}/${date('date')}.txt`, log + '\n', err => {
+            if(err){
+                reportLogError(err, 'writeLogs')
+            }
+        })
+    }
+}
+function saveResults(results){
+    let path = cwd();
+    //Makes logging directory if doesn't exist
+    path = `${path}/savedResults`
+    if (fs.existsSync(path) == false){
+        fs.mkdirSync(path);
+    }
     if (!fs.existsSync(`${path}/${date('date')}.txt`)){
         fs.writeFile(`${path}/${date('date')}.txt`, log, {flags: 'w'}, err => {
             if(err){
@@ -80,4 +105,4 @@ function writeLog(log, local){
     }
 }
 
-module.exports = {databaseLog, generalLogs, appPostLog}
+module.exports = {databaseLog, generalLogs, appPostLog,saveResults}

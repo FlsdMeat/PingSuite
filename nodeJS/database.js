@@ -96,7 +96,7 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){ //
         try {
             res = await db.query(
                 `INSERT INTO PingResults (deviceID, datetime, building, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
-                VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${(pingTest['min']).toFixed(2)}, ${(pingTest['avg']).toFixed(2)}, '${pingTest['loss']}', ${(pingTest['max']).toFixed(2)}, ${(pingTest['stddev']).toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${(speedTest['ping']).toFixed(2)})`
+                VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${(pingTest['stddev']).toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${(speedTest['ping']).toFixed(2)})`
             )
             delete res['meta']
             databaseLog(`${deviceName} latest ping was delievered to the database!`)
@@ -105,7 +105,7 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){ //
         } catch (error) {
             databaseLog(`Error with uploadSpeedTest`,error)
             saveResults(`INSERT INTO PingResults (deviceID, datetime, building, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
-            VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${(pingTest['min']).toFixed(2)}, ${(pingTest['avg']).toFixed(2)}, '${pingTest['loss']}', ${(pingTest['max']).toFixed(2)}, ${(pingTest['stddev']).toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${(speedTest['ping']).toFixed(2)})`)
+            VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${(pingTest['stddev']).toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${(speedTest['ping']).toFixed(2)})`)
             db.end()
             return false
         }
