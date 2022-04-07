@@ -1,7 +1,7 @@
 //Used for .env enviornment file
 require('dotenv').config()
 //Used for propper logging
-const { databaseLog } = require('./logging.js')
+const { databaseLog, saveResults } = require('./logging.js')
 //MariaDB api
 const mariadb = require('mariadb')
 //MariaDB variable creation
@@ -104,6 +104,8 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){ //
             return true
         } catch (error) {
             databaseLog(`Error with uploadSpeedTest`,error)
+            saveResults(`INSERT INTO PingResults (deviceID, datetime, building, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
+            VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${(pingTest['min']).toFixed(2)}, ${(pingTest['avg']).toFixed(2)}, '${pingTest['loss']}', ${(pingTest['max']).toFixed(2)}, ${(pingTest['stddev']).toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${(speedTest['ping']).toFixed(2)})`)
             db.end()
             return false
         }
