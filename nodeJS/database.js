@@ -1,7 +1,12 @@
+//Used for .env enviornment file
 require('dotenv').config()
-const { databaseLog } = require('./logging.js')
+//Used for propper logging
+const { databaseLog, saveResults } = require('./logging.js')
+//MariaDB api
 const mariadb = require('mariadb')
+//MariaDB variable creation
 let pool;
+//Asks .env file if its production or not, needed for development
 if(process.env.NODE_ENV == 'production'){
     pool = mariadb.createPool({
         host:process.env.DB_HOST,
@@ -20,6 +25,7 @@ if(process.env.NODE_ENV == 'production'){
     })
 }
 
+//returns specific date formats
 function date(dateType, daysPrev){
     let date_time = new Date();
     let date = ("0" + date_time.getDate()).slice(-2);
@@ -28,11 +34,12 @@ function date(dateType, daysPrev){
     let hours = date_time.getHours();
     let minutes = date_time.getMinutes();
     let seconds = date_time.getSeconds();
+    //returns dates like 2022-02-30
     if (dateType === 'date'){
         return `${year}-${month}-${date}`;
     } else if (dateType === 'time'){
-        return `${hours}:${minutes}:${seconds}`;
-    } else if (dateType === 'daysPrev'){
+        return `${hours}:${minutes}:${seconds}`;  //returns times like 04:28:56
+    } else if (dateType === 'daysPrev'){ // Returns a previous date
         let pastDate = new Date(date_time);
         pastDate.setDate(pastDate.getDate() - daysPrev);
         date = ("0" + pastDate.getDate()).slice(-2);
@@ -44,7 +51,7 @@ function date(dateType, daysPrev){
     }
 }
 
-async function checkDevice(db, mac, deviceName, ipAddr){
+async function checkDevice(db, mac, deviceName, ipAddr){  //Checks if a device exists in the database, if adds it, then will return device specs
     let res = '';
     try {
         res = await db.query(
@@ -76,7 +83,7 @@ async function checkDevice(db, mac, deviceName, ipAddr){
     }
 }
 
-async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){
+async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){ //Uploads the tests, adds the building from the ip
     let ipLocal = {
         1:'Harugari Hall',2:'South Campus Hall',3:'1124 Campbell Ave',4:'Kaplan Hall',5:'Dodds Hall', 6:'Bethel Hall',7:'Gate House', 8:'Campus Store / UNH PD', 9:'Bartels Hall', 10:'Buckman Hall / Utility Building',
         11:'Peterson Library', 12:'Maxcy Hall', 13:'Bayer Hall', 14:'Bartels Student Activity Center', 15:'Dunham Hall', 16:'Sheffield Hall', 17:'Winchester Hall', 18:'Arbeiter Maenner Chor', 19:'North Campus - House', 20:'Echlin Hall'
@@ -89,22 +96,24 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){
         try {
             res = await db.query(
                 `INSERT INTO PingResults (deviceID, datetime, building, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
-                VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${pingTest['stddev'].toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${speedTest['ping'].toFixed(2)})`
+                VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${(pingTest['stddev']).toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${(speedTest['ping']).toFixed(2)})`
             )
             delete res['meta']
             databaseLog(`${deviceName} latest ping was delievered to the database!`)
             db.end()
             return true
         } catch (error) {
-            databaseLog(`Error with uploadSpeedTest`,error)
             db.end()
+            databaseLog(`Error with uploadSpeedTest`,error)
+            saveResults(`INSERT INTO PingResults (deviceID, datetime, building, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
+            VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${(pingTest['stddev']).toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${(speedTest['ping']).toFixed(2)})`)
             return false
         }
     }
     db.end();
 }
 
-async function getPingResults(){
+async function getPingResults(){ //Returns the pingTests from the database
     let db, res;
     db = await pool.getConnection();
     try {
@@ -121,7 +130,7 @@ async function getPingResults(){
     }
 }
 
-async function getCurrentDeviceDetails(){
+async function getCurrentDeviceDetails(){ //Returns device specific details
     let db, res;
     db = await pool.getConnection();
     try {
