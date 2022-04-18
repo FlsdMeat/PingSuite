@@ -5,13 +5,8 @@
   "main": "raspBackServer.js",
   "scripts": {
     "client": "cd web-portal && yarn start",
-<<<<<<< Updated upstream
-    "server": "nodemon raspBackServer.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
-=======
     "server": "nodemon raspServer.js",
     "dev": "concurrently --kill-others-on-fail \"yarn raspServer\" \"yarn client\""
->>>>>>> Stashed changes
   },
   "author": "",
   "license": "ISC",
