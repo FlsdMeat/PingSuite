@@ -40,6 +40,14 @@ CREATE TABLE `sshLogin`(
     `password` VARCHAR(48) NOT NULL,
     FOREIGN KEY(`deviceID`) REFERENCES `Devices`(`id`)
 );
+-- @block
+CREATE TABLE `deviceSettings`(
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `deviceID` INT NOT NULL,
+    `pingCount` INT NOT NULL,
+    `pingTime` INT NOT NULL,
+    FOREIGN KEY(`deviceID`) REFERENCES `Devices`(`id`)
+);
 -- @BLOCK
 SELECT * FROM sshLogin;
 -- @BLOCK
@@ -50,8 +58,8 @@ SELECT * FROM Devices;
 SELECT * FROM PingResults;
 
 -- @BLOCK
-INSERT INTO PingResults (deviceID, datetime, pingMin, pingAvg, pingMax, pingLoss, pingStdDev, sTdown,sTup,sTping) 
-VALUES (1, '2022-03-03 18:44:1', 7.417, 46.287, 116.276, '0%', 35.8515, 253780845, 239892515, 13.454);
+INSERT INTO deviceSettings (deviceID, pingCount, pingTime)
+VALUES (1, 600, 1);
 
 -- @BLOCK
 CREATE VIEW `PingResultsView` AS

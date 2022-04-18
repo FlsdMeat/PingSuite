@@ -74,8 +74,7 @@ async function checkDevice(db, mac, deviceName, ipAddr){  //Checks if a device e
         res = await db.query(
             `SELECT id FROM Devices WHERE MacAddress = '${mac}';`
         )
-        console.log(res[0])
-
+        console.log(res)
         return res[0]
     } catch (error) {
         databaseLog(`Error with checkingDevice`,error)
@@ -100,8 +99,11 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){ //
             )
             delete res['meta']
             databaseLog(`${deviceName} latest ping was delievered to the database!`)
+            res = await db.query(
+                `SELECT pingCount, pingTime from deviceSettings WHERE deviceID = ${deviceCheck.id}`
+            )
             db.end()
-            return true
+            return res[0]
         } catch (error) {
             db.end()
             databaseLog(`Error with uploadSpeedTest`,error)
