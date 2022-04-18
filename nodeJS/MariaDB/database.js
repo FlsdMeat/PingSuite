@@ -1,7 +1,7 @@
 //Used for .env enviornment file
 require('dotenv').config()
 //Used for propper logging
-const { databaseLog, saveResults } = require('./logging.js')
+const { databaseLog, saveResults } = require('../logs/logging.js')
 //MariaDB api
 const mariadb = require('mariadb')
 //MariaDB variable creation
@@ -18,8 +18,8 @@ if(process.env.NODE_ENV == 'production'){
 } else {
     pool = mariadb.createPool({
         host:process.env.DB_HOST,
-        user:process.env.DB_USER,
-        password:process.env.DB_PW,
+        user:process.env.DB_HomeUSER,
+        password:process.env.DB_HomePW,
         database:process.env.DB_DATABASE,
         connectionLimit:4
     })

@@ -2,10 +2,10 @@
   "name": "pingtest_host_server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "raspBackServer.js",
   "scripts": {
     "client": "cd web-portal && yarn start",
-    "server": "nodemon server.js",
+    "server": "nodemon raspBackServer.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "author": "",
