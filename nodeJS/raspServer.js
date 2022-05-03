@@ -7,6 +7,7 @@ const { uploadSpeedTest } = require('./MariaDB/database.js')
 //Logging for the app posting
 const { appPostLog } = require('./logs/logging.js')
 const { PingResults } = require('./JSONAPI/pingResults.js')
+const {DeviceAlerts} = require('./JSONAPI/DeviceAlerts.js')
 require('dotenv').config()
 
 app.use(express.json())
@@ -44,7 +45,22 @@ const resetCache = () =>{
         resetCache()
     }, process.env.CACHE_RESET);
 }
-resetCache()
+
+const deviceCheckup = () => {
+    setTimeout(()=>{
+        try {
+            DeviceAlerts()
+        } catch (error) {}
+        deviceCheckup()
+    }, process.env.DEVICE_CHECK)
+}
+
+function startUpFunctions(){
+    resetCache()
+    deviceCheckup()
+}
+
+startUpFunctions()
 
 if (process.env.NODE_ENV === 'production') {
     // Serve any static files

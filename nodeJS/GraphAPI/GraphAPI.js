@@ -1,6 +1,7 @@
 const {AllDates} = require('./AllDates.js')
 const {SelectDate} = require('./SelectDate.js')
 const { DateRange } = require('./DateRange.js')
+const { graphAPILog } = require('../logs/logging.js')
 async function GraphAPI(graphData, url, graphParams){
     const getRandomColor = () =>{
       return [Math.floor(Math.random() * (256 - 100) + 100), Math.floor(Math.random() * (256 - 100) + 100), Math.floor(Math.random() * (256 - 100) + 100)]
@@ -19,7 +20,7 @@ async function GraphAPI(graphData, url, graphParams){
         }
         return data
     } catch (error) {
-        console.log(error)
+        graphAPILog(`Error with GraphAPI`,error)
     }
 }
 

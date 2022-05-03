@@ -6,7 +6,7 @@
   "scripts": {
     "client": "cd web-portal && yarn start",
     "server": "nodemon raspServer.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn raspServer\" \"yarn client\""
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "mariadb": "^2.5.6",
+    "nodemailer": "^6.7.4",
     "react-chartjs": "^1.2.0"
   },
   "devDependencies": {

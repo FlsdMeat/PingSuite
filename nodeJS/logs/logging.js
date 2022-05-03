@@ -56,6 +56,23 @@ function appPostLog(status, error){
     }
 
 }
+
+function graphAPILog(status, error){
+    try {
+        generalLogs('graphAPILog', status, error)
+    } catch (error) {
+        reportLogError(error, 'graphAPILog')
+    }
+}
+
+function deviceAlertsLog(status, error){
+    try {
+        generalLogs('deviceAlertsLog', status, error)
+    } catch (error) {
+        reportLogError(error, 'deviceAlertsLog')
+    }
+}
+
 function reportLogError(err, who){
     console.log(`[${date('date')}__${date('time')}][${who}]: ${err}`)
 }
@@ -91,13 +108,13 @@ function saveResults(results){
         fs.mkdirSync(path);
     }
     if (!fs.existsSync(`${path}/${date('date')}.txt`)){
-        fs.writeFile(`${path}/${date('date')}.txt`, log, {flags: 'w'}, err => {
+        fs.writeFile(`${path}/${date('date')}.txt`, results, {flags: 'w'}, err => {
             if(err){
                 reportLogError(err, 'writeLogs')
             }
         })
     } else {
-        fs.appendFile(`${path}/${date('date')}.txt`, log + '\n', err => {
+        fs.appendFile(`${path}/${date('date')}.txt`, results + '\n', err => {
             if(err){
                 reportLogError(err, 'writeLogs')
             }
@@ -105,4 +122,4 @@ function saveResults(results){
     }
 }
 
-module.exports = {databaseLog, generalLogs, appPostLog,saveResults} 
+module.exports = {databaseLog, generalLogs, appPostLog,saveResults, graphAPILog, deviceAlertsLog} 

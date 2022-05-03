@@ -1,31 +1,37 @@
+const { graphAPILog } = require('../logs/logging.js')
 async function DateRange(graphData, url, graphParams){
-    const getGraphData = () => {
-        try {
-            let rangeType, graphYAxis, organization;
-            rangeType = url[0]
-            graphYAxis = graphParams[1]
-            organization = graphParams[2]
-            let dateRange = graphParams[3].replaceAll('?', ' ').split('+')
-            dateRange = grabDateArr(dateRange)
-            let labels = getRangeArray(dateRange)
-            let labelsObj = labels[0]
-            labels = labels[1]
-            if(organization === 'device'){
-                datasets = datasetsDateRangeDevices(graphData, graphYAxis, labels, dateRange)
-            } else if (organization === 'building'){
-                datasets = datasetsDateRangeBuildings(graphData, graphYAxis, labels, labelsObj, dateRange)
+    try {
+        const getGraphData = () => {
+            try {
+                let rangeType, graphYAxis, organization;
+                rangeType = url[0]
+                graphYAxis = graphParams[1]
+                organization = graphParams[2]
+                let dateRange = graphParams[3].replaceAll('?', ' ').split('+')
+                dateRange = grabDateArr(dateRange)
+                let labels = getRangeArray(dateRange)
+                let labelsObj = labels[0]
+                labels = labels[1]
+                if(organization === 'device'){
+                    datasets = datasetsDateRangeDevices(graphData, graphYAxis, labels, dateRange)
+                } else if (organization === 'building'){
+                    datasets = datasetsDateRangeBuildings(graphData, graphYAxis, labels, labelsObj, dateRange)
+                }
+                return{
+                    labels:labels,
+                    datasets:datasets
+                };
+            } catch (error) {
+                console.log(error)
+                return false
             }
-            return{
-                labels:labels,
-                datasets:datasets
-            };
-        } catch (error) {
-            console.log(error)
-            return false
+            
         }
-        
+        return getGraphData()
+    } catch (error) {
+        graphAPILog('Error with DateRange', error)
     }
-    return getGraphData()
+    
 }
 function grabDateArr(dateRange){
     try{
@@ -64,8 +70,8 @@ function grabDateArr(dateRange){
             return `${dateArr[1]} ${dateArr[2]}, ${dateArr[3]}`
         })
         return dateArray
-    }catch(err){
-        console.log(err)
+    }catch(error){
+        graphAPILog('Error with DateRange grabDateArr', error)
     }
 }
 function getRangeArray(dateRange){
@@ -89,48 +95,52 @@ function getRangeArray(dateRange){
         })
         return [dateTimeObj, dateArr]
     } catch (error) {
-        console.log('error in getRangeArary', error)
+        graphAPILog('Error with DateRange getRangeArray', error)
     }
 }
-function datasetsDateRangeDevices(graphData, graphYAxis, labels, dateRange){
-    return Object.keys(graphData).map( (device, index) => {
-        let dataObj = {}
-        let dataArr = []
-        Object.keys(graphData[device][selectDate]).forEach(time => {
-            let timeInt = parseInt(time.substring(0, time.indexOf(':')))
-            time = graphData[device][selectDate][time]
-            if(graphYAxis === 'sTdown' || graphYAxis === 'sTup'){
-                dataObj[timeInt] = (time[graphYAxis] / 1000000)
-            } else if (graphYAxis === 'pingLoss'){
-                if(time[graphYAxis].length !== 0){
-                    dataObj[timeInt] = parseInt(time[graphYAxis].replace('%', ''))
+function datasetsDateRangeDevices(graphData, graphYAxis, labels){
+    try {
+        return Object.keys(graphData).map( (device, index) => {
+            let dataObj = {}
+            let dataArr = []
+            Object.keys(graphData[device][selectDate]).forEach(time => {
+                let timeInt = parseInt(time.substring(0, time.indexOf(':')))
+                time = graphData[device][selectDate][time]
+                if(graphYAxis === 'sTdown' || graphYAxis === 'sTup'){
+                    dataObj[timeInt] = (time[graphYAxis] / 1000000)
+                } else if (graphYAxis === 'pingLoss'){
+                    if(time[graphYAxis].length !== 0){
+                        dataObj[timeInt] = parseInt(time[graphYAxis].replace('%', ''))
+                    }
+                }  else {
+                    dataObj[timeInt] = time[graphYAxis]
                 }
-            }  else {
-                dataObj[timeInt] = time[graphYAxis]
+            })
+            labels.forEach(time => {
+                if(!(time in dataObj)){
+                    dataArr.push(0)
+                } else {
+                    dataArr.push(dataObj[time])
+                }
+            })
+            let color = graphData[device]['color']
+            return{
+                id: index + 1,
+                data:dataArr,
+                label:graphData[device]['DeviceName'],
+                backgroundColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`,
+                borderColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`
             }
         })
-        labels.forEach(time => {
-            if(!(time in dataObj)){
-                dataArr.push(0)
-            } else {
-                dataArr.push(dataObj[time])
-            }
-        })
-        let color = graphData[device]['color']
-        return{
-            id: index + 1,
-            data:dataArr,
-            label:graphData[device]['DeviceName'],
-            backgroundColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`,
-            borderColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`
-        }
-    })
+    } catch (error) {
+        graphAPILog('Error with DateRange datasetsDateRangeDevices', error)
+    }
 }
-function datasetsDateRangeBuildings(graphData,graphYAxis, labels, labelsObj, dateRange){
-    let buildings = {}
-    let buildingsFinalData = {}
-    let tempItem = {}
-    try{
+function datasetsDateRangeBuildings(graphData,graphYAxis, labelsObj, dateRange){
+    try {
+        let buildings = {}
+        let buildingsFinalData = {}
+        let tempItem = {}
         // loop for each device in object from db, http://10.5.70.233/api/pingResults/allDates
         Object.keys(graphData).forEach((device) => {
             Object.keys(graphData[device]).forEach((date)=>{
@@ -200,21 +210,21 @@ function datasetsDateRangeBuildings(graphData,graphYAxis, labels, labelsObj, dat
                 }
             })
         })
-    }catch (err){
-        console.log(err)
+        return Object.keys(buildingsFinalData).map((building, index)=>{
+            if(building === 'color'){
+                return false
+            }
+            let color = buildings[building]['color']
+            return{
+                id: index + 1,
+                data:buildingsFinalData[building],
+                label:building,
+                backgroundColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`,
+                borderColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`
+            }
+        })
+    } catch (error) {
+        graphAPILog('Error with DateRange datasetsDateRangeBuildings', error)
     }
-    return Object.keys(buildingsFinalData).map((building, index)=>{
-        if(building === 'color'){
-            return false
-        }
-        let color = buildings[building]['color']
-        return{
-            id: index + 1,
-            data:buildingsFinalData[building],
-            label:building,
-            backgroundColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`,
-            borderColor:`rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`
-        }
-    })
 }
 module.exports = {DateRange}

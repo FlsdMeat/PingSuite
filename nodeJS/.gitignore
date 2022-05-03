@@ -1,5 +1,3 @@
 /node_modules
 **/.env
-/logs/appPost
-/logs/appPostLog
-/logs/database
+/logs/*

@@ -1,3 +1,3 @@
-Select * FROM PingResults;
+Select * FROM Devices;
 -- @BLOCK
-DELETE FROM PingResults WHERE pingID = 330 or pingID = 333 or pingID = 334
+UPDATE Devices SET LastReport = '2022-04-30' WHERE id = 1

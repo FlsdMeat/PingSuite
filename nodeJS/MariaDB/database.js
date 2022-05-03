@@ -26,7 +26,7 @@ if(process.env.NODE_ENV == 'production'){
 }
 
 //returns specific date formats
-function date(dateType, daysPrev){
+function date(dateType, ){
     let date_time = new Date();
     let date = ("0" + date_time.getDate()).slice(-2);
     let month = ("0" + (date_time.getMonth() + 1)).slice(-2);
@@ -39,13 +39,6 @@ function date(dateType, daysPrev){
         return `${year}-${month}-${date}`;
     } else if (dateType === 'time'){
         return `${hours}:${minutes}:${seconds}`;  //returns times like 04:28:56
-    } else if (dateType === 'daysPrev'){ // Returns a previous date
-        let pastDate = new Date(date_time);
-        pastDate.setDate(pastDate.getDate() - daysPrev);
-        date = ("0" + pastDate.getDate()).slice(-2);
-        month = ("0" + (pastDate.getMonth() + 1)).slice(-2);
-        year = pastDate.getFullYear();
-        return `${year}-${month}-${date}`;
     } else {
         databaseLog(`[DateTime]: Type not specified`, `[DateTime]: Type not specified: ${dateType}`)
     }
@@ -97,6 +90,9 @@ async function uploadSpeedTest(speedTest, pingTest, mac, deviceName, ipAddr){ //
                 `INSERT INTO PingResults (deviceID, datetime, building, pingMin, pingAvg, pingLoss, pingMax, pingStdDev, sTdown,sTup,sTping) 
                 VALUES (${deviceCheck.id}, '${date('date')} ${date('time')}', '${building}', ${pingTest['min']}, ${pingTest['avg']}, '${pingTest['loss']}', ${pingTest['max']}, ${(pingTest['stddev']).toFixed(4)}, ${Math.trunc(speedTest['download'])}, ${Math.trunc(speedTest['upload'])}, ${(speedTest['ping']).toFixed(2)})`
             )
+            let res2 = await db.query(
+                `UPDATE Devices SET LastReport = '${date('date')} ${date('time')}', CurrentLocal = '${building}' WHERE id = ${deviceCheck.id}`
+            )
             delete res['meta']
             databaseLog(`${deviceName} latest ping was delievered to the database!`)
             res = await db.query(
@@ -133,6 +129,7 @@ async function getPingResults(){ //Returns the pingTests from the database
 }
 
 async function getCurrentDeviceDetails(){ //Returns device specific details
+
     let db, res;
     db = await pool.getConnection();
     try {
