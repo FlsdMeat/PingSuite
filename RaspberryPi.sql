@@ -4,6 +4,7 @@ CREATE TABLE `Devices`(
     `DeviceName` VARCHAR(255) NOT NULL,
     `MacAddress` VARCHAR(255) NOT NULL UNIQUE,
     `CurrentLocal` VARCHAR(255) NULL,
+    `LastReport` DATE NULL,
     `ipAddr` VARCHAR(15) NOT NULL
 );
 -- @block
@@ -51,7 +52,7 @@ CREATE TABLE `deviceSettings`(
 -- @BLOCK
 SELECT * FROM sshLogin;
 -- @BLOCK
-ALTER TABLE PingResults MODIFY COLUMN `sTping` DECIMAL(4,3) NOT NULL;
+ALTER TABLE Devices ADD COLUMN `Active` BOOLEAN NOT NULL;
 -- @block
 SELECT * FROM Devices;
 -- @block
