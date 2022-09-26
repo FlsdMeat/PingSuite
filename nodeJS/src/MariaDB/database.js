@@ -1,7 +1,7 @@
 //Used for .env enviornment file
 require('dotenv').config()
 //Used for propper logging
-const { databaseLog, saveResults } = require('../logs/logging.js')
+const { databaseLog, saveResults } = require('../../logs/logging.js')
 //MariaDB api
 const mariadb = require('mariadb')
 //MariaDB variable creation

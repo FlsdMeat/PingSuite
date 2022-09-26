@@ -1,5 +1,0 @@
-UPDATE Devices SET `ipAddr` = '172.26.105.206' WHERE `id` = 5;
--- @BLOCK
-ALTER TABLE Devices MODIFY COLUMN `ipAddr` VARCHAR(15) NOT NULL;
--- @BLOCK
-SELECT * FROM PingResults;

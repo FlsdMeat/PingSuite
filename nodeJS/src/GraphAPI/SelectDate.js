@@ -1,4 +1,4 @@
-const { graphAPILog } = require('../logs/logging.js')
+const { graphAPILog } = require('../../logs/logging.js')
 async function SelectDate(graphData, url,graphParams){
     try {
         const getGraphData = () => {

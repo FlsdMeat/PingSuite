@@ -1,0 +1,6 @@
+/nodejs/node_modules
+/nodejs/src/web-portal/node_modules
+/nodejs/src/.env
+/python/src/.env
+/python/logs/*
+/nodejs/logs
