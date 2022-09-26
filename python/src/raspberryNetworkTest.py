@@ -2,6 +2,7 @@ from time import sleep
 import speedtest
 import subprocess
 import json
+import dotenv
 from dotenv import load_dotenv
 import os
 from math import sqrt
@@ -17,7 +18,6 @@ from getmac import get_mac_address
 from socket import gethostname, gethostbyname
 
 load_dotenv()
-
 async def getIP(logs):
     addrs = psutil.net_if_addrs()
     ipAddr = '127.0.0.1'
