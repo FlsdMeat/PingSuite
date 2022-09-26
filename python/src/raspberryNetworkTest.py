@@ -2,6 +2,8 @@ from time import sleep
 import speedtest
 import subprocess
 import json
+from dotenv import load_dotenv
+import os
 from math import sqrt
 import ensureWifiConnection as checkWifi
 import psutil
@@ -13,6 +15,8 @@ from loggingClasses.networkAlerts import NetworkAlerts
 import requests
 from getmac import get_mac_address
 from socket import gethostname, gethostbyname
+
+load_dotenv()
 
 async def getIP(logs):
     addrs = psutil.net_if_addrs()
@@ -130,21 +134,21 @@ async def runTests():
             errorLogs.raiseError(error)
     ethernet = ipAddr[1]
 
+    results = {}
     #setup a new pipe for 2 shared objects
-    try:
-        speedResults = await speedTest(logs)
-    except Exception as error:
-        errorLogs.raiseError(error)
-    try:
-        pingResults = await pingTest(logs)
-    except Exception as error:
-        errorLogs.raiseError(error)
+    if os.getenv('SPEED_TEST') == 'true':
+        try:
+            speedResults = await speedTest(logs)
+            results["SpeedTest"] = speedResults
+        except Exception as error:
+            errorLogs.raiseError(error)
+    if os.getenv('PING_TEST') == 'true':
+        try:
+            pingResults = await pingTest(logs)
+            results["PingResults"] = pingResults
+        except Exception as error:
+            errorLogs.raiseError(error)
     #start the threads
-    #grab results
-    try:
-        results = {"SpeedTest":speedResults,"PingResults":pingResults}
-    except Exception as error:
-        errorLogs.raiseError(error)
     #startDatabaseWorker(results[0], results[1])
     try:
         await postData(results, ethernet)

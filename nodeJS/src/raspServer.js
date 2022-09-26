@@ -23,6 +23,7 @@ app.post('/pingResults', (req,res) => {
                 data[item] = JSON.parse(data[item])
             }
         })
+        console.log(data)
         uploadSpeedTest(data.SpeedTest, data.PingResults, data.mac, data.name, data.ip)
         appPostLog(`${data.name} with a mac ${data.mac} just sent a ping!`)
         return res.send(true)
