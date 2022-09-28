@@ -37,7 +37,7 @@ async def getIP(logs):
 
 
 async def getParams(type):
-    r = await requests.post('http://localhost:8080/api/params', data={'type': type, 'macAdd':gma()})
+    r = await requests.post('%s/api/params'%os.getenv('API_SERVER'), data={'type': type, 'macAdd':gma()})
     print(r)
     return r
 
@@ -48,7 +48,7 @@ async def postData(data, eth, logs):
     data['name'] = gethostname()
     data['ip'] = eth
     try:
-        r = requests.post('http://localhost:8080/pingResults', data=data)
+        r = requests.post('%s/pingResults'%os.getenv('API_SERVER'), data=data)
         logs.WriteLog(date=True, data='Data sent!\n[Request] %s'%r, function='postData')
     except Exception as error:
         errorLogs.raiseError(error)
@@ -59,7 +59,7 @@ async def pingTest(logs, ipAddr):
     try:
         #getTestParams = await getParams() #Used to get parameters for the specific raspberry pi, incase it has special settings
         logs.WriteLog(date=True, data='Starting Ping Test', function='pingTest')
-        pingResults = subprocess.Popen(['ping', '-I' + ipAddr, '-i 0.5', '-c 5', '8.8.8.8'], stdout=subprocess.PIPE)
+        pingResults = subprocess.Popen(['ping', '-I' + ipAddr, '-i %s'%os.getenv('PING_INTERVAL'), '-c %s'%os.getenv('PING_AMOUNT'), '%s'%os.getenv('PING_SERVER')], stdout=subprocess.PIPE)
         output = str(pingResults.communicate()).replace('n64 bytes from 8.8.8.8: ', '').split('\n')
         logs.WriteLog(date=True, data='Finished Ping Test', function='pingTest')
         output = output[0].split('\\')
@@ -95,11 +95,11 @@ async def speedTestSecure(logs, ipAddr):
         #Runs a speed test from speedtest.net
         logs.WriteLog(date=True, data='Starting Speed Test', function='speedTest')
         speedtest = subprocess.Popen(['speedtest-cli', '--secure', '--source', ipAddr], stdout=subprocess.PIPE)
-        output = str(speedtest.communicate()).split('\\\n')
+        output = str(speedtest.communicate()).split('\\n')
         speedtest = {'ping': 0, 'download':0, 'upload': 0}
         for line in output:
             if 'Hosted by' in line and "ms" in line:
-                speedtest['ping'] = float(line.split(': ')[2].replace(' ms', ''))
+                speedtest['ping'] = float(line.split(': ')[1].replace(' ms', ''))
             elif "Download: " in line:
                 speedtest['download'] = float(line.split(': ')[1].split(' M')[0])
             elif "Upload: " in line:
@@ -164,6 +164,8 @@ async def runTests():
         except Exception as error:
             errorLogs.raiseError(error)
     elif os.getenv('ETHERNET') == 'true':
+        if os.getenv('WIFI') == 'false':
+            ipAddr[0] = ipAddr[1]
         ethernet = ipAddr[1]
     else:
         ipAddr[0] = ipAddr[1]
@@ -173,7 +175,7 @@ async def runTests():
     if os.getenv('SPEED_TEST') == 'true':
         try:
             #speedResults = await speedTest(logs, ipAddr)  #Unsecure, old, doesn't work anymore
-            speedResults = await speedTestSecure(logs, ipAddr) #Secure
+            speedResults = await speedTestSecure(logs, ipAddr[0]) #Secure
             results["SpeedTest"] = speedResults
         except Exception as error:
             errorLogs.raiseError(error)
@@ -181,7 +183,7 @@ async def runTests():
         results["SpeedTest"] = '{"download":0, "upload":0, "ping":0}'
     if os.getenv('PING_TEST') == 'true':
         try:
-            pingResults = await pingTest(logs, ipAddr)
+            pingResults = await pingTest(logs, ipAddr[0])
             results["PingResults"] = pingResults
         except Exception as error:
             errorLogs.raiseError(error)
@@ -200,4 +202,4 @@ if __name__ == '__main__':
     while(1):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(runTests())
-        sleep(3600)
+        sleep(os.getenv('PING_REST'))
