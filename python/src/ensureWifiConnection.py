@@ -6,7 +6,7 @@ from loggingClasses.loggingClass import Logging
 from loggingClasses.errorLogging import ErrorLogging
 
 def getWifiConnection(attemptedConnections):
-    logs = Logging('../logs/ensureWifiConnection/[date]', 'getWifiConnection', True, 'txt', True, True, True)
+    logs = Logging('ensureWifiConnection/[date]', 'getWifiConnection', True, 'txt', True, True, True)
     errorLogs = ErrorLogging('getWifiConnection', 'ensureWifiConnection')
     addrs = psutil.net_if_addrs()
     networkAdapters = list(addrs.keys())
@@ -25,8 +25,6 @@ def getWifiConnection(attemptedConnections):
                 networkCheck = subprocess.Popen(['ifup', list(wirelessAdapter.keys())[0]], stdout=subprocess.PIPE)
         except Exception as error:
             errorLogs.raiseError(error)
-        output = str(networkCheck.communicate())
-
         try:
             for netDev in addrs:
                 temp = addrs[netDev][0][1]

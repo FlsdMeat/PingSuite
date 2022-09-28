@@ -14,7 +14,7 @@ async function GraphAPI(graphData, url, graphParams){
         if(url[0] === 'allDates'){
             data = await AllDates(graphData, url,graphParams)
         } else if (url[0] === 'selectDate'){
-            data = await SelectDate(graphData, url,graphParams)
+            data = await SelectDate(graphData, url, graphParams)
         } else if (url[0] === 'dateRange'){
             data = await DateRange(graphData, url, graphParams)
         }

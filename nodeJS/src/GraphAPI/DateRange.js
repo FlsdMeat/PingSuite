@@ -144,7 +144,7 @@ function datasetsDateRangeBuildings(graphData,graphYAxis, labelsObj, dateRange){
         // loop for each device in object from db, http://10.5.70.233/api/pingResults/allDates
         Object.keys(graphData).forEach((device) => {
             Object.keys(graphData[device]).forEach((date)=>{
-                //double checking if the datbe is inside labelsOj
+                //double checking if the date is inside labelsObj
                 if(date !== 'DeviceName' && date !== 'CurrentStatus' && date !== 'color' && dateRange.includes(date)){
                     tempItem[date] = graphData[device][date]
                     Object.keys(graphData[device][date]).forEach((time, index) => {

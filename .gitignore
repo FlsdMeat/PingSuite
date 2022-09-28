@@ -4,3 +4,4 @@
 /python/src/.env
 /python/logs/*
 /nodejs/logs
+/src/.env

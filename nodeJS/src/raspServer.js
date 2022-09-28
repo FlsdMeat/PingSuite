@@ -5,9 +5,9 @@ const server = require('http').createServer(app);
 //Database Functions
 const { uploadSpeedTest } = require('./MariaDB/database.js')
 //Logging for the app posting
-const { appPostLog } = require('../logs/logging.js')
-const { PingResults } = require('./JSONAPI/pingResults.js')
-const {DeviceAlerts} = require('./JSONAPI/DeviceAlerts.js')
+const { appPostLog } = require('./logging.js')
+const { PingResults } = require('../logs/JSONAPI/pingResults.js')
+const {DeviceAlerts} = require('../logs/JSONAPI/DeviceAlerts.js')
 require('dotenv').config()
 
 app.use(express.json())

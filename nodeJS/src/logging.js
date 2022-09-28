@@ -3,6 +3,8 @@ const fs = require('fs')
 // Current directory
 const { cwd } = require('process')
 
+require('dotenv').config()
+
 function date(dateType){ // Used to get specific dates or time for file creation
     let date_time = new Date();
     let date = ("0" + date_time.getDate()).slice(-2);
@@ -78,7 +80,7 @@ function reportLogError(err, who){
 }
 
 function writeLog(log, local){
-    let path = cwd();
+    let path = process.env.CURRENT_DIR
     //Makes logging directory if doesn't exist
     path = `${path}/logs/${local}`
     if (fs.existsSync(path) == false){
@@ -101,7 +103,7 @@ function writeLog(log, local){
     }
 }
 function saveResults(results){
-    let path = cwd();
+    let path = process.env.CURRENT_DIR
     //Makes logging directory if doesn't exist
     path = `${path}/savedResults`
     if (fs.existsSync(path) == false){

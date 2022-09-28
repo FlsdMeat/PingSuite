@@ -1,0 +1,12 @@
+[Unit]
+Description=PingTest for Pi4
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3.9 /usr/local/bin/PingTest/python/src/raspberryNetworkTest.py
+User=root
+
+[Install]
+WantedBy=multi-user.target

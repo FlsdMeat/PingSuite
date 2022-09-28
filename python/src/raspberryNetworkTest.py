@@ -2,7 +2,7 @@ from time import sleep
 import speedtest
 import subprocess
 import json
-import dotenv
+import asyncio
 from dotenv import load_dotenv
 import os
 from math import sqrt
@@ -31,7 +31,9 @@ async def getIP(logs):
             return [ipAddr, ethernet]
         elif (netDev == ethernet or ethernet in netDev):
             ethernet = temp
-    return False
+    if ethernet == 'eth0':
+        ethernet = False
+    return [False, ethernet]
 
 
 async def getParams(type):
@@ -52,20 +54,20 @@ async def postData(data, eth, logs):
         errorLogs.raiseError(error)
 
 
-async def pingTest(logs):
-    errorLogs = ErrorLogging('runTests', 'logs/errors/pingTest/[date]')
+async def pingTest(logs, ipAddr):
+    errorLogs = ErrorLogging('runTests', 'pingTest/[date]')
     try:
         #getTestParams = await getParams() #Used to get parameters for the specific raspberry pi, incase it has special settings
         logs.WriteLog(date=True, data='Starting Ping Test', function='pingTest')
-        pingResults = subprocess.Popen(['ping', '-I' + str(ipAdd), '-i 0.5', '-c 5', '8.8.8.8'], stdout=subprocess.PIPE)
-        logs.WriteLog(date=True, data='Finished Ping Test', function='pingTest')
+        pingResults = subprocess.Popen(['ping', '-I' + ipAddr, '-i 0.5', '-c 5', '8.8.8.8'], stdout=subprocess.PIPE)
         output = str(pingResults.communicate()).replace('n64 bytes from 8.8.8.8: ', '').split('\n')
+        logs.WriteLog(date=True, data='Finished Ping Test', function='pingTest')
         output = output[0].split('\\')
         for item in range(1, len(output)-5):
             output[item] = output[item][output[item].index('time=')+5:-3]
         output.pop(0)
         output.pop(-1)
-        #Runs a ping test, converts data into a string. 100 pings, 50 seconds totalpingResults = str(ping('8.8.8.8', verbose=False, count=5,interval=0.5))
+        #Runs a ping test, converts data into a string. 100 pings, 50 piseconds totalpingResults = str(ping('8.8.8.8', verbose=False, count=5,interval=0.5))
         logs.WriteLog(date=True, data='Finding common math things from ping test', function='pingTest')
         currentPingStats = str(output[-1][output[-1].index('= ')+2:-3]).split('/')
         percentLoss = str(output[-2][output[-2].index('%') - 1:output[-2].index('%')])
@@ -87,15 +89,42 @@ async def pingTest(logs):
         errorLogs.raiseError(error)
         return {"ERROR":error}
     
+async def speedTestSecure(logs, ipAddr):
+    errorLogs = ErrorLogging('runTests', 'speedTest/[date]')
+    try:
+        #Runs a speed test from speedtest.net
+        logs.WriteLog(date=True, data='Starting Speed Test', function='speedTest')
+        speedtest = subprocess.Popen(['speedtest-cli', '--secure', '--source', ipAddr], stdout=subprocess.PIPE)
+        output = str(speedtest.communicate()).split('\\\n')
+        speedtest = {'ping': 0, 'download':0, 'upload': 0}
+        for line in output:
+            if 'Hosted by' in line and "ms" in line:
+                speedtest['ping'] = float(line.split(': ')[2].replace(' ms', ''))
+            elif "Download: " in line:
+                speedtest['download'] = float(line.split(': ')[1].split(' M')[0])
+            elif "Upload: " in line:
+                speedtest['upload'] = float(line.split(': ')[1].split(' M')[0])
+        logs.WriteLog(date=True, data='Finished Speed Test', function='speedTest')
+        #converts data to JSON, and makes it preeety
+        logs.WriteLog(date=True, data='Finished SpeedTest, Full Output: %s'%json.dumps(speedtest, indent=4), function='speedTest')
+        try:   
+            return speedtest
+        except Exception as error:
+            #in case something doesnt print right, will print without json pretty printing
+            logs.WriteLog(date=True, data="SpeedTest Error: %s\nData: %s"%(error, speedtest), function='speedTest')
+            errorLogs.raiseError(error)
+            return str(speedtest)
+    except Exception as error:
+        errorLogs.raiseError(error)
+        return {"ERROR":error}
 
-
-def speedTest(logs):
-    errorLogs = ErrorLogging('runTests', 'logs/errors/speedTest/[date]')
+async def speedTest(logs, ipAddr):
+    errorLogs = ErrorLogging('runTests', 'speedTest/[date]')
     try:
         #Runs a speed test from speedtest.net
         threads = None
         logs.WriteLog(date=True, data='Starting Speed Test', function='speedTest')
-        s = speedtest.Speedtest(source_address=ipAdd)
+        s = speedtest.Speedtest(source_address=ipAddr)
         s.get_best_server()
         s.download(threads=threads)
         s.upload(threads=threads)
@@ -118,40 +147,50 @@ def speedTest(logs):
 
 
 async def runTests():
-    logs = Logging('logs/runTests/[date]', 'main', True, 'txt', True, False, True)
-    errorLogs = ErrorLogging('runTests', 'logs/errors/main/[date]')
+    logs = Logging('runTests/[date]', 'main', True, 'txt', True, False, True)
+    errorLogs = ErrorLogging('runTests', 'main/[date]')
     attemptedConnection = 0
-    ipAddr = getIP()
-    try:
-        if (ipAddr == False or "172.26" not in ipAddr[0]):
-            logs.WriteLog(date=True, data='Unable to connect to ChargerWifi, attempting reconnection...', function='runTests')
-            attemptedConnection = checkWifi.getWifiConnection(attemptedConnection)
-        if (attemptedConnection == 5):
-            logs.WriteLog(date=True, data='Unable to connect to ChargerWifi, shutting down program', function='runTests')
-            errorLogs.raiseError('Unable to connect to ChargerWifi, shutting down program')
-            exit()
-    except Exception as error:
+    ipAddr = await getIP(logs)
+    logs.WriteLog(date=True, data='Checking Wifi Connection', function='runTests')
+    if os.getenv('WIFI') == 'true':
+        try:
+            if (ipAddr[0] == False or ipAddr[0] != ipAddr[1]):
+                logs.WriteLog(date=True, data='Unable to connect to ChargerWifi, attempting reconnection...', function='runTests')
+                attemptedConnection = checkWifi.getWifiConnection(attemptedConnection)
+            if (attemptedConnection == 5):
+                logs.WriteLog(date=True, data='Unable to connect to ChargerWifi, shutting down program', function='runTests')
+                errorLogs.raiseError('Unable to connect to ChargerWifi, shutting down program')
+                exit()
+        except Exception as error:
             errorLogs.raiseError(error)
-    ethernet = ipAddr[1]
+    elif os.getenv('ETHERNET') == 'true':
+        ethernet = ipAddr[1]
+    else:
+        ipAddr[0] = ipAddr[1]
 
     results = {}
     #setup a new pipe for 2 shared objects
     if os.getenv('SPEED_TEST') == 'true':
         try:
-            speedResults = await speedTest(logs)
+            #speedResults = await speedTest(logs, ipAddr)  #Unsecure, old, doesn't work anymore
+            speedResults = await speedTestSecure(logs, ipAddr) #Secure
             results["SpeedTest"] = speedResults
         except Exception as error:
             errorLogs.raiseError(error)
+    else:
+        results["SpeedTest"] = '{"download":0, "upload":0, "ping":0}'
     if os.getenv('PING_TEST') == 'true':
         try:
-            pingResults = await pingTest(logs)
+            pingResults = await pingTest(logs, ipAddr)
             results["PingResults"] = pingResults
         except Exception as error:
             errorLogs.raiseError(error)
+    else:
+        results["PingResults"] = '{"min":0, "avg":0,"loss":0, "max":0, "stddev":0}'
     #start the threads
     #startDatabaseWorker(results[0], results[1])
     try:
-        await postData(results, ethernet)
+        await postData(results, ethernet, logs)
         return True
     except Exception as error:
         errorLogs.raiseError(error)
@@ -159,5 +198,6 @@ async def runTests():
 
 if __name__ == '__main__':
     while(1):
-        runTests()
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(runTests())
         sleep(3600)

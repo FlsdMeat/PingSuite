@@ -13,7 +13,7 @@ def checkWorkingDirectory(curDir, where):
         if item == "[date]":
             item = date
         if dir == curDir:
-            dir = curDir + '/' + item
+            dir = curDir + '/logs/' + item
         else:
             dir = dir + '/' + item
         if not os.path.exists(dir):
