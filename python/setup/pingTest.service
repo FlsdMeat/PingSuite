@@ -1,5 +1,5 @@
 [Unit]
-Description=PingTest for Pi4
+Description=PingTest for Pi4, logs: sudo tail -f /usr/local/bin/PingTest/python/logs/runTests/main*
 After=multi-user.target
 
 [Service]

@@ -6,7 +6,7 @@ from loggingClasses.loggingClass import Logging
 from loggingClasses.errorLogging import ErrorLogging
 
 def getWifiConnection(attemptedConnections):
-    logs = Logging('ensureWifiConnection/[date]', 'getWifiConnection', True, 'txt', True, True, True)
+    logs = Logging('ensureWifiConnection', 'getWifiConnection', True, 'txt', True, True, True)
     errorLogs = ErrorLogging('getWifiConnection', 'ensureWifiConnection')
     addrs = psutil.net_if_addrs()
     networkAdapters = list(addrs.keys())

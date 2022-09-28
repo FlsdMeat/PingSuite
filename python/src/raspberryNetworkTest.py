@@ -14,18 +14,16 @@ from loggingClasses.loggingClass import Logging
 from loggingClasses.errorLogging import ErrorLogging
 from loggingClasses.networkAlerts import NetworkAlerts
 import requests
-from getmac import get_mac_address
-from socket import gethostname, gethostbyname
+from socket import gethostname
 
 load_dotenv()
 async def getIP(logs):
     addrs = psutil.net_if_addrs()
     ipAddr = '127.0.0.1'
-    ethernet = 'eth0'
-    for netDev in addrs:
-        print(netDev)
+    ethernet = 'eth0' #default ethernet device on raspi
+    for netDev in addrs: # looks through network devices, looks for working ip
         temp = addrs[netDev][0][1]
-        if("172.26" in temp):
+        if("172.26" in temp): ## need to fix this
             ipAddr = temp
             logs.WriteLog(date=True, data="Connection Successful to ChargerWifi", function='getIP')
             return [ipAddr, ethernet]
@@ -33,15 +31,15 @@ async def getIP(logs):
             ethernet = temp
     if ethernet == 'eth0':
         ethernet = False
-    return [False, ethernet]
+    return [False, ethernet] #if no suitable wifi ip was found, sends back a false ip and whatever ethernet ended up being.
 
 
-async def getParams(type):
+async def getParams(type): #for later, able to send new settings to a device
     r = await requests.post('%s/api/params'%os.getenv('API_SERVER'), data={'type': type, 'macAdd':gma()})
     print(r)
     return r
 
-async def postData(data, eth, logs):
+async def postData(data, eth, logs): #send data to http server
     logs.WriteLog(date=True, data='Sending data to home server', function='postData')
     errorLogs = ErrorLogging('runTests', 'logs/errors/pingTest/[date]')
     data['mac'] = gma()
@@ -54,12 +52,12 @@ async def postData(data, eth, logs):
         errorLogs.raiseError(error)
 
 
-async def pingTest(logs, ipAddr):
+async def pingTest(logs, ipAddr): 
     errorLogs = ErrorLogging('runTests', 'pingTest/[date]')
     try:
         #getTestParams = await getParams() #Used to get parameters for the specific raspberry pi, incase it has special settings
         logs.WriteLog(date=True, data='Starting Ping Test', function='pingTest')
-        pingResults = subprocess.Popen(['ping', '-I' + ipAddr, '-i %s'%os.getenv('PING_INTERVAL'), '-c %s'%os.getenv('PING_AMOUNT'), '%s'%os.getenv('PING_SERVER')], stdout=subprocess.PIPE)
+        pingResults = subprocess.Popen(['ping', '-I ' + ipAddr, '-i %s'%os.getenv('PING_INTERVAL'), '-c %s'%os.getenv('PING_AMOUNT'), '%s'%os.getenv('PING_SERVER')], stdout=subprocess.PIPE)
         output = str(pingResults.communicate()).replace('n64 bytes from 8.8.8.8: ', '').split('\n')
         logs.WriteLog(date=True, data='Finished Ping Test', function='pingTest')
         output = output[0].split('\\')
@@ -94,6 +92,7 @@ async def speedTestSecure(logs, ipAddr):
     try:
         #Runs a speed test from speedtest.net
         logs.WriteLog(date=True, data='Starting Speed Test', function='speedTest')
+        #cant use speedtest cli python since there is no secure option, so must resort to cli version
         speedtest = subprocess.Popen(['speedtest-cli', '--secure', '--source', ipAddr], stdout=subprocess.PIPE)
         output = str(speedtest.communicate()).split('\\n')
         speedtest = {'ping': 0, 'download':0, 'upload': 0}
@@ -147,12 +146,12 @@ async def speedTest(logs, ipAddr):
 
 
 async def runTests():
-    logs = Logging('runTests/[date]', 'main', True, 'txt', True, False, True)
+    logs = Logging('runTests', 'main', True, 'txt', True, False, True)
     errorLogs = ErrorLogging('runTests', 'main/[date]')
     attemptedConnection = 0
-    ipAddr = await getIP(logs)
+    ipAddr = await getIP(logs) #get ip address to be using
     logs.WriteLog(date=True, data='Checking Wifi Connection', function='runTests')
-    if os.getenv('WIFI') == 'true':
+    if os.getenv('WIFI') == 'true': #if wifi setting is enabled, make wifi is working
         try:
             if (ipAddr[0] == False or ipAddr[0] != ipAddr[1]):
                 logs.WriteLog(date=True, data='Unable to connect to ChargerWifi, attempting reconnection...', function='runTests')
@@ -163,12 +162,13 @@ async def runTests():
                 exit()
         except Exception as error:
             errorLogs.raiseError(error)
-    elif os.getenv('ETHERNET') == 'true':
-        if os.getenv('WIFI') == 'false':
+    elif os.getenv('ETHERNET') == 'true': # if ethernet is on, update object
+        if os.getenv('WIFI') == 'false': # if wifi is off, use ethernet
             ipAddr[0] = ipAddr[1]
         ethernet = ipAddr[1]
     else:
-        ipAddr[0] = ipAddr[1]
+        ipAddr[1] = ipAddr[0]
+        ethernet = ipAddr[1]
 
     results = {}
     #setup a new pipe for 2 shared objects
@@ -202,4 +202,4 @@ if __name__ == '__main__':
     while(1):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(runTests())
-        sleep(os.getenv('PING_REST'))
+        sleep(int(os.getenv('PING_REST')))
