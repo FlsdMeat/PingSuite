@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+logs
+src/web-portal/node_modules
+src/web-portal/public
+src/web-portal/src
+src/web-portal/.gitignore
+src/web-portal/package-lock.json
+src/web-portal/package.json
+src/web-portal/README.md
+src/web-portal/yarn.lock

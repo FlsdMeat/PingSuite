@@ -5,7 +5,7 @@ class ErrorLogging():
     def __init__(self, where, dest = ''):
         self.where = where #Where being the location where the error happened
         self.dest = dest
-        self.errorLog = Logging('logs/errors/%s/%s'%(self.dest,self.where), self.where, format='txt', printLogs=False, dateTimeInLine=True, list=True, append=True)
+        self.errorLog = Logging('errors/%s/%s'%(self.dest,self.where), self.where, format='txt', printLogs=False, dateTimeInLine=True, list=True, append=True)
 
     def raiseError(self, error, additionalInfo = ''):
         template = "\n  An exception of type {0} occurred. Arguments:\n     {1!r}\n{2}"
@@ -20,6 +20,6 @@ class ErrorLogging():
             message = template.format(type(error).__name__, error.args, temp, additionalInfo)
         else:
             message = template.format(type(error).__name__, error.args, temp)
-        self.errorLog.WriteLog(date=True, data='[%s] %s'%(self.where, message))
+        self.errorLog.WriteLog(date=True, data='[%s] %s'%(self.where, message), function=self.where)
 
         print('\nERROR: %s\n%s\n\n'%(self.where, message))
