@@ -5,7 +5,7 @@ WORKDIR /usr/src/pingtest_python
 COPY .dockerenv src/.env
 
 COPY requirements.txt requirements.txt
-RUN pip3 install requirements.txt
+RUN pip3 install -r requirements.txt
 
 COPY . .
 

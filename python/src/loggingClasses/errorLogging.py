@@ -12,7 +12,7 @@ class ErrorLogging():
         if additionalInfo != '':
             template += "\n{3}"
         template+='\n\n'
-        tracebackStr = traceback.format_exception(error)
+        tracebackStr = traceback.format_exception(error, error)
         temp = ''
         for str in tracebackStr: temp += '  %s'%str
         message = ''

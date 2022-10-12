@@ -5,9 +5,10 @@ const server = require('http').createServer(app);
 //Database Functions
 const { uploadSpeedTest } = require('./MariaDB/database.js')
 //Logging for the app posting
-const { appPostLog } = require('./logging.js')
+const { appPostLog, databaseLog } = require('./logging.js')
 const { PingResults } = require('./JSONAPI/pingResults.js')
 const { DeviceAlerts } = require('./JSONAPI/DeviceAlerts.js')
+const { setup } = require('./MariaDB/database.js')
 require('dotenv').config()
 
 app.use(express.json())
@@ -58,7 +59,8 @@ const deviceCheckup = () => {
 
 function startUpFunctions(){
     resetCache()
-    deviceCheckup()
+    setup()
+    //deviceCheckup()
 }
 
 startUpFunctions()
@@ -68,7 +70,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(__dirname + '/web-portal/build'));
       
     // Handle React routing, return all requests to React app
-    app.get('/', function(req, res) {
+    app.get('/' + process.env.PREFIX, function(req, res) {
       res.sendFile(__dirname + '/web-portal/build/' + 'index.html');
     });
 }

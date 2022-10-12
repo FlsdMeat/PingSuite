@@ -15,6 +15,7 @@ async function AllDates(graphData, url,graphParams){
                 Object.keys(findDates).forEach(year =>{
                     Object.keys(findDates[year]).forEach(month =>{
                         Object.keys(findDates[year][month]).forEach(day =>{
+                            console.log("[GraphAPI][AllDates] Line 18: ", `${month} ${day}`, labelsObj[`${month} ${day}`])
                             labels.push(`${month} ${day}`)
                             labelsObj[`${month} ${day}`] = `${month} ${day}`
                         })
@@ -196,8 +197,10 @@ function datasetsAllDatesBuildings(graphData,graphYAxis,condense, labelsObj){
                             if (buildings[item['local']][date] === undefined){
                                 buildings[item['local']][date] = []
                             }
+
                             //inside of buildings, we have the building name which is an object, and inside that is the date, and for that is an array of the graphYAxis data of that date
                             buildings[item['local']][date].push(item[graphYAxis])
+                            console.log(buildings)
                         })
                     }
 

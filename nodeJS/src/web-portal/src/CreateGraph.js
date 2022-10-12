@@ -27,20 +27,27 @@ export default function CreateGraph({organization, condense,graphYAxis, graphTyp
 
     const getGraphData = async () => {
         if(rangeType === 'allDates'){
-            await axios.get(`/api/pingResults/allDates/${graphType}_${graphYAxis}_${condense}_${organization}`)
-                .then(async res=>{
-                    if(res.data !== false){
-                        updateGraphPoints(res.data)
-                    }
-            })
+            try {
+                await axios.get(`/api/pingResults/allDates/${graphType}_${graphYAxis}_${condense}_${organization}`)
+                    .then(async res=>{
+                        if(res.data !== false){
+                            updateGraphPoints(res.data)
+                        }
+                })
+            } catch (error) {
+                console.log("[CreateGraph][getGraphData] AXIOS ERROR allDates: ", error)
+            }
         } else {
-            console.log('Dog')
-            await axios.get(`/api/pingResults/${rangeType}/${graphType}_${graphYAxis}_${organization}_${dates}`)
-                .then(res=>{
-                    if(res.data !== false){
-                        updateGraphPoints(res.data)
-                    }
-            })
+            try{
+                await axios.get(`/api/pingResults/${rangeType}/${graphType}_${graphYAxis}_${organization}_${dates}`)
+                    .then(res=>{
+                        if(res.data !== false){
+                            updateGraphPoints(res.data)
+                        }
+                })
+            } catch (error) {
+                console.log("[CreateGraph][getGraphData] AXIOS ERROR: ", error)
+            }
         }
     }
 

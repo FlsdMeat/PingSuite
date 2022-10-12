@@ -13,16 +13,35 @@ if(process.env.NODE_ENV == 'production'){
         user:process.env.DB_USER,
         password:process.env.DB_PW,
         database:process.env.DB_DATABASE,
+        port:process.env.DB_PORT,
         connectionLimit:4
     })
 } else {
     pool = mariadb.createPool({
         host:process.env.DB_HOST,
-        user:process.env.DB_HomeUSER,
-        password:process.env.DB_HomePW,
+        user:process.env.DB_USER,
+        password:process.env.DB_PW,
         database:process.env.DB_DATABASE,
+        port:process.env.DB_PORT,
         connectionLimit:4
     })
+}
+
+async function setup(){
+    let db, res;
+    db = await pool.getConnection();
+    try {
+        res = await db.query(
+            `SELECT * FROM Devices;`
+        )
+        delete res[`meta`]
+        db.end();
+        return res
+    } catch (error) {
+        databaseLog(`Error with getPingResults`,error)
+        db.end();
+        return false
+    }
 }
 
 //returns specific date formats
@@ -150,4 +169,71 @@ async function getCurrentDeviceDetails(){ //Returns device specific details
         return false
     }
 }
-module.exports = {uploadSpeedTest, getPingResults, getCurrentDeviceDetails}
+
+async function setup(){
+    let db, res;
+    db = await pool.getConnection();
+    try {
+        res = await db.query(
+            "CREATE TABLE IF NOT EXISTS `Devices`( "+
+                "`id` INT PRIMARY KEY AUTO_INCREMENT,"+
+                "`DeviceName` VARCHAR(255) NOT NULL,"+
+                "`MacAddress` VARCHAR(255) NOT NULL UNIQUE,"+
+                "`CurrentLocal` VARCHAR(255) NULL,"+
+                "`LastReport` DATE NULL,"+
+                "`ipAddr` VARCHAR(15) NOT NULL);")
+        res = await db.query(
+            "CREATE TABLE IF NOT EXISTS `PingResults`("+
+                "`pingID` INT PRIMARY KEY AUTO_INCREMENT,"+
+                "`deviceID` INT NOT NULL,"+
+                "`datetime` DATETIME NOT NULL,"+
+                "`building` VARCHAR(255) NOT NULL,"+
+                "`pingMin` DECIMAL(7,6) NOT NULL,"+
+                "`pingAvg` DECIMAL(7,6) NOT NULL,"+
+                "`pingMax` DECIMAL(10,6) NOT NULL,"+
+                "`pingStdDev` DECIMAL(10,5) NOT NULL,"+
+                "`sTdown` DECIMAL(9,7) NOT NULL,"+
+                "`sTup`  DECIMAL(9,7) NOT NULL,"+
+                "`sTping`  DECIMAL(10,5) NOT NULL,"+
+                "FOREIGN KEY (`deviceID`) REFERENCES `Devices`(`id`));")
+        res = await db.query(
+            "CREATE TABLE IF NOT EXISTS `DeviceLogs`("+
+                "`logID` INT PRIMARY KEY AUTO_INCREMENT,"+
+                "`deviceID` INT NOT NULL,"+
+                "`datetime` DATETIME NOT NULL,"+
+                "`latestPing` INT NOT NULL,"+
+                "`information` JSON NOT NULL,"+
+                "`logLocal` VARCHAR(255) NOT NULL,"+
+                "FOREIGN KEY(`deviceID`) REFERENCES `Devices`(`id`),"+
+                "FOREIGN KEY(`latestPing`) REFERENCES `PingResults`(`pingID`));")
+        res = await db.query(
+            "CREATE TABLE IF NOT EXISTS `sshLogin`("+
+                "`id` INT PRIMARY KEY AUTO_INCREMENT,"+
+                "`deviceID` INT NOT NULL,"+
+                "`username` VARCHAR(15) NOT NULL,"+
+                "`password` VARCHAR(48) NOT NULL,"+
+                "FOREIGN KEY(`deviceID`) REFERENCES `Devices`(`id`));")
+        res = await db.query(
+            "CREATE TABLE IF NOT EXISTS `deviceSettings`("+
+                "`id` INT PRIMARY KEY AUTO_INCREMENT,"+
+                "`deviceID` INT NOT NULL,"+
+                "`pingCount` INT NOT NULL,"+
+                "`pingTime` INT NOT NULL,"+
+                "FOREIGN KEY(`deviceID`) REFERENCES `Devices`(`id`));"
+        )
+        res = await db.query(
+            "CREATE VIEW IF NOT EXISTS `PingResultsView` AS"+
+            " SELECT t1.DeviceName, t1.ipAddr, t1.MacAddress, t2.*"+
+            " FROM PingResults t2 JOIN Devices t1 ON t2.deviceID = t1.id;"
+        )
+        delete res[`meta`]
+        db.end();
+        return res
+    } catch (error) {
+        databaseLog(`Error with setup`,error)
+        db.end();
+        return false
+    }
+}
+
+module.exports = {uploadSpeedTest, getPingResults, getCurrentDeviceDetails, setup}

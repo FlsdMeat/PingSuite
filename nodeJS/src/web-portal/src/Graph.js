@@ -32,6 +32,10 @@ export default function App() {
     }
   }, [dropDownObject])
 
+  useEffect(()=>{
+    console.log("Graph was updated")
+  }, [showGenerateGraph])
+
   const dataOptions = [{
     'PingTest Average':'pingAvg',
     'PingTest Max':'pingMax',
@@ -119,8 +123,8 @@ export default function App() {
   }
 
   const getGraphOject = () => {
+    console.log("Graph is updating", showGenerateGraph)
     updateGenGraph(false)
-    updateClick(clickToUpdate + 1)
     if(rangeType === 'allDates'){
       updateGraphObject(<CreateGraph key={1} organization={organization} condense={dataCondense} graphYAxis={graphYAxis} graphType={graphType} rangeType={rangeType}/>)
     }
@@ -130,6 +134,8 @@ export default function App() {
     if (rangeType === 'dateRange'){
       updateGraphObject(<CreateGraph key={1} organization={organization} condense={dataCondense} graphYAxis={graphYAxis} graphType={graphType} rangeType={rangeType} dateRange={selectDate + '+' + selectDate2}/>)
     }
+    updateClick(1)
+    console.log("Graph is done updating", showGenerateGraph)
   }
 
   return (

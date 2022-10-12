@@ -1,6 +1,8 @@
 node_modules
 npm-debug.log
 logs
+.env
+src/.env
 src/web-portal/node_modules
 src/web-portal/public
 src/web-portal/src

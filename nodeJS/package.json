@@ -4,8 +4,8 @@
   "description": "",
   "main": "raspBackServer.js",
   "scripts": {
-    "client": "cd web-portal && yarn start",
-    "server": "nodemon raspServer.js",
+    "client": "cd src/web-portal && yarn start",
+    "server": "nodemon src/raspServer.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "author": "",
